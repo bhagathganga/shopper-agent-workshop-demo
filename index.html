@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopper Agent Workshop Demo</title>
+  <style>
+    :root {
+      --brand: #0176d3;
+      --brand-dark: #032d60;
+      --bg: #f3f6fb;
+      --card: #ffffff;
+      --border: #d8dde6;
+      --text: #181818;
+      --muted: #5c6b7a;
+      --error: #ba0517;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(160deg, var(--bg), #e7eefb);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header.appbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 22px;
+      background: var(--brand-dark);
+      color: #fff;
+    }
+    header.appbar .title { font-size: 16px; font-weight: 600; letter-spacing: 0.2px; }
+    header.appbar button {
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      padding: 7px 12px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    header.appbar button:hover { background: rgba(255,255,255,0.24); }
+
+    main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; }
+
+    /* ---- Config form ---- */
+    .card {
+      width: 100%;
+      max-width: 560px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 10px 40px rgba(3,45,96,0.10);
+      padding: 28px 30px 32px;
+    }
+    .card h1 { font-size: 20px; margin: 0 0 4px; color: var(--brand-dark); }
+    .card p.sub { margin: 0 0 20px; color: var(--muted); font-size: 14px; }
+
+    label { display: block; font-size: 13px; font-weight: 600; margin: 14px 0 5px; }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      background: #fff;
+      color: var(--text);
+    }
+    input:focus, textarea:focus { outline: 2px solid var(--brand); outline-offset: 0; border-color: var(--brand); }
+    textarea { resize: vertical; min-height: 92px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+
+    .paste-row { display: flex; gap: 8px; align-items: flex-end; }
+    .paste-row .grow { flex: 1; }
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--brand); color: #fff; }
+    .btn-primary:hover { background: #015fb0; }
+    .btn-secondary { background: #eef2f8; color: var(--brand-dark); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: #e2e9f4; }
+    .btn-row { display: flex; gap: 10px; margin-top: 22px; }
+
+    .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .msg { margin-top: 14px; font-size: 13px; padding: 10px 12px; border-radius: 8px; display: none; }
+    .msg.error { display: block; background: #feecea; color: var(--error); border: 1px solid #f5c2bd; }
+    .msg.info  { display: block; background: #eaf5ff; color: var(--brand-dark); border: 1px solid #bcdfff; }
+
+    /* ---- Chat stage ---- */
+    #chat-stage { flex: 1; width: 100%; display: none; }
+    #chat-stage.active { display: flex; align-items: stretch; justify-content: center; }
+    #chat {
+      width: 100%;
+      max-width: 760px;
+      height: 100%;
+      min-height: 520px;
+    }
+    #load-error { display: none; }
+  </style>
+</head>
+<body>
+  <header class="appbar">
+    <div class="title" id="appbar-title">Shopper Agent Workshop Demo</div>
+    <button id="settings-btn" style="display:none;">⚙️ Settings</button>
+  </header>
+
+  <main>
+    <!-- Config gate -->
+    <section class="card" id="config-view">
+      <h1>Connect your Shopper Agent</h1>
+      <p class="sub">Paste your MIAW connection JSON to auto-fill, or enter the values by hand. Everything is stored only in this browser.</p>
+
+      <label for="paste">Paste config JSON (optional)</label>
+      <div class="paste-row">
+        <div class="grow">
+          <textarea id="paste" placeholder='{ "OrganizationId": "...", "DeveloperName": "...", "Url": "https://...my.salesforce-scrt.com" }'></textarea>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:8px;">
+        <button class="btn btn-secondary" id="parse-btn" type="button">Fill fields from JSON</button>
+        <button class="btn btn-secondary" id="example-btn" type="button">Load NTO example</button>
+      </div>
+
+      <label for="scrt2Url">SCRT2 URL <span style="color:var(--error)">*</span></label>
+      <input type="text" id="scrt2Url" placeholder="https://xxxx.my.salesforce-scrt.com" />
+
+      <label for="orgId">Organization ID <span style="color:var(--error)">*</span></label>
+      <input type="text" id="orgId" placeholder="00Dxxxxxxxxxxxxxxx" />
+
+      <label for="esDeveloperName">ES Developer Name <span style="color:var(--error)">*</span></label>
+      <input type="text" id="esDeveloperName" placeholder="My_Shopper_Agent_ES" />
+
+      <label for="capabilitiesVersion">Capabilities Version</label>
+      <input type="text" id="capabilitiesVersion" placeholder="65" />
+      <div class="hint">Defaults to 65 if left blank.</div>
+
+      <label for="headerText">Chat header label</label>
+      <input type="text" id="headerText" placeholder="Shopper Agent" />
+
+      <div class="msg" id="config-msg"></div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="save-btn" type="button">Connect</button>
+        <button class="btn btn-secondary" id="clear-btn" type="button">Clear saved config</button>
+      </div>
+    </section>
+
+    <!-- Chat stage -->
+    <section id="chat-stage">
+      <div id="chat"></div>
+      <div class="card" id="load-error">
+        <h1>Couldn't load the assistant</h1>
+        <p class="sub">The chat bundle failed to load — check your network connection (the CDN host <code>cdn.search.cimulate.ai</code> must be reachable), then retry.</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="retry-btn" type="button">Retry</button>
+          <button class="btn btn-secondary" id="error-settings-btn" type="button">Change config</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var STORAGE_KEY = "shopperAgentWorkshopConfig";
+      var CDN_VERSION = "1.24.7";
+      var BUNDLE_URL = "https://cdn.search.cimulate.ai/copilot-widget/" + CDN_VERSION + "/messaging.umd.js";
+
+      var NTO_EXAMPLE = {
+        channelAddressIdentifier: "866ca16e-f5c9-49f5-b2b5-250c5f4a34ee",
+        OrganizationId: "00DWt00000KCYnB",
+        DeveloperName: "NTO_Shopper_Agent_ES_Custom",
+        Url: "https://storm-b76c200d4b76c7.my.salesforce-scrt.com"
+      };
+
+      // ---- element refs ----
+      var $ = function (id) { return document.getElementById(id); };
+      var configView = $("config-view");
+      var chatStage = $("chat-stage");
+      var loadError = $("load-error");
+      var settingsBtn = $("settings-btn");
+      var msgEl = $("config-msg");
+
+      // ---- config persistence ----
+      function loadConfig() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : null;
+        } catch (e) { return null; }
+      }
+      function saveConfig(cfg) { localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg)); }
+      function clearConfig() { localStorage.removeItem(STORAGE_KEY); }
+
+      // ---- form helpers ----
+      // Accepts either the MIAW field names (Url/OrganizationId/DeveloperName) or
+      // our own field names, and fills the form.
+      function fillForm(obj) {
+        if (!obj) return;
+        if (obj.Url || obj.scrt2Url) $("scrt2Url").value = obj.Url || obj.scrt2Url || "";
+        if (obj.OrganizationId || obj.orgId) $("orgId").value = obj.OrganizationId || obj.orgId || "";
+        if (obj.DeveloperName || obj.esDeveloperName) $("esDeveloperName").value = obj.DeveloperName || obj.esDeveloperName || "";
+        if (obj.capabilitiesVersion) $("capabilitiesVersion").value = obj.capabilitiesVersion;
+        if (obj.headerText) $("headerText").value = obj.headerText;
+      }
+
+      function readForm() {
+        return {
+          scrt2Url: $("scrt2Url").value.trim(),
+          orgId: $("orgId").value.trim(),
+          esDeveloperName: $("esDeveloperName").value.trim(),
+          capabilitiesVersion: $("capabilitiesVersion").value.trim() || "65",
+          headerText: $("headerText").value.trim() || "Shopper Agent"
+        };
+      }
+
+      function showMsg(text, kind) {
+        msgEl.textContent = text;
+        msgEl.className = "msg " + (kind || "info");
+      }
+      function hideMsg() { msgEl.className = "msg"; msgEl.textContent = ""; }
+
+      function validate(cfg) {
+        if (!cfg.scrt2Url) return "SCRT2 URL is required.";
+        if (!/^https?:\/\/.+/i.test(cfg.scrt2Url)) return "SCRT2 URL must be a full https:// URL.";
+        if (!cfg.orgId) return "Organization ID is required.";
+        if (!cfg.esDeveloperName) return "ES Developer Name is required.";
+        return null;
+      }
+
+      // ---- views ----
+      function showConfigView(prefill) {
+        chatStage.classList.remove("active");
+        chatStage.style.display = "none";
+        configView.style.display = "block";
+        settingsBtn.style.display = "none";
+        loadError.style.display = "none";
+        hideMsg();
+        if (prefill) fillForm(prefill);
+      }
+
+      function showChatView() {
+        configView.style.display = "none";
+        chatStage.style.display = "flex";
+        chatStage.classList.add("active");
+        settingsBtn.style.display = "inline-block";
+      }
+
+      // ---- widget bootstrap ----
+      var scriptEl = null;
+
+      function mountWidget(cfg) {
+        showChatView();
+        $("appbar-title").textContent = cfg.headerText || "Shopper Agent Workshop Demo";
+        loadError.style.display = "none";
+        $("chat").style.display = "block";
+
+        if (window.CimulateMessaging && window.CimulateMessaging.injectMessagingWidget) {
+          inject(cfg);
+          return;
+        }
+
+        // load the bundle once
+        if (!scriptEl) {
+          scriptEl = document.createElement("script");
+          scriptEl.src = BUNDLE_URL;
+          scriptEl.async = true;
+          scriptEl.onload = function () {
+            if (window.CimulateMessaging && window.CimulateMessaging.injectMessagingWidget) {
+              inject(cfg);
+            } else {
+              showLoadError();
+            }
+          };
+          scriptEl.onerror = function () { showLoadError(); };
+          document.head.appendChild(scriptEl);
+        }
+      }
+
+      function inject(cfg) {
+        try {
+          window.CimulateMessaging.injectMessagingWidget({
+            elementId: "chat",
+            mode: "messaging",
+            componentConfig: {
+              isOpen: true,
+              isMinimized: false,
+              options: { dialogFullHeight: true }
+            },
+            messagingConfig: {
+              scrt2Url: cfg.scrt2Url,
+              orgId: cfg.orgId,
+              esDeveloperName: cfg.esDeveloperName,
+              capabilitiesVersion: cfg.capabilitiesVersion,
+              enableEscalationToAgent: false
+            },
+            headerText: cfg.headerText,
+            theme: {
+              primaryColor: "#0176d3"
+            }
+          });
+        } catch (e) {
+          console.error("[ShopperAgentDemo] injectMessagingWidget failed:", e);
+          showLoadError();
+        }
+      }
+
+      function showLoadError() {
+        $("chat").style.display = "none";
+        loadError.style.display = "block";
+      }
+
+      // ---- events ----
+      $("parse-btn").addEventListener("click", function () {
+        var text = $("paste").value.trim();
+        if (!text) { showMsg("Paste your config JSON first.", "info"); return; }
+        try {
+          fillForm(JSON.parse(text));
+          hideMsg();
+          showMsg("Fields filled from JSON. Review and Connect.", "info");
+        } catch (e) {
+          showMsg("That doesn't look like valid JSON: " + e.message, "error");
+        }
+      });
+
+      $("example-btn").addEventListener("click", function () {
+        $("paste").value = JSON.stringify(NTO_EXAMPLE, null, 2);
+        fillForm(NTO_EXAMPLE);
+        showMsg("Loaded the NTO example. Replace with your own org's values.", "info");
+      });
+
+      $("save-btn").addEventListener("click", function () {
+        var cfg = readForm();
+        var err = validate(cfg);
+        if (err) { showMsg(err, "error"); return; }
+        saveConfig(cfg);
+        // reload so the widget initializes cleanly against the new config
+        location.reload();
+      });
+
+      $("clear-btn").addEventListener("click", function () {
+        clearConfig();
+        $("paste").value = "";
+        ["scrt2Url", "orgId", "esDeveloperName", "capabilitiesVersion", "headerText"].forEach(function (id) { $(id).value = ""; });
+        showMsg("Saved config cleared.", "info");
+      });
+
+      settingsBtn.addEventListener("click", function () { showConfigView(loadConfig()); });
+      $("error-settings-btn").addEventListener("click", function () { showConfigView(loadConfig()); });
+      $("retry-btn").addEventListener("click", function () {
+        var cfg = loadConfig();
+        if (cfg) { scriptEl = null; mountWidget(cfg); }
+      });
+
+      // ---- init ----
+      var existing = loadConfig();
+      if (existing) {
+        mountWidget(existing);
+      } else {
+        showConfigView(null);
+      }
+    })();
+  </script>
+</body>
+</html>
