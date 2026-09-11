@@ -106,6 +106,16 @@
       min-height: 520px;
     }
     #load-error { display: none; }
+
+    /* ---- Mobile ---- */
+    @media (max-width: 640px) {
+      main { padding: 12px; align-items: stretch; }
+      header.appbar { padding: 12px 16px; }
+      .card { padding: 20px 18px 24px; border-radius: 10px; }
+      .btn-row { flex-wrap: wrap; }
+      .btn { flex: 1 1 auto; }
+      #chat { max-width: 100%; min-height: 78vh; }
+    }
   </style>
 </head>
 <body>
@@ -118,41 +128,34 @@
     <!-- Config gate -->
     <section class="card" id="config-view">
       <h1>Connect your Shopper Agent</h1>
-      <p class="sub">Paste your MIAW connection JSON to auto-fill, or enter the values by hand. Everything is stored only in this browser.</p>
+      <p class="sub">Paste the <strong>Install Code Snippet</strong> JSON from your Embedded Service Deployment, then click Connect. Everything is stored only in this browser.</p>
 
-      <label for="paste">Paste config JSON (optional)</label>
-      <div class="paste-row">
-        <div class="grow">
-          <textarea id="paste" placeholder='{ "OrganizationId": "...", "DeveloperName": "...", "Url": "https://...my.salesforce-scrt.com" }'></textarea>
-        </div>
-      </div>
-      <div class="btn-row" style="margin-top:8px;">
-        <button class="btn btn-secondary" id="parse-btn" type="button">Fill fields from JSON</button>
-        <button class="btn btn-secondary" id="example-btn" type="button">Load NTO example</button>
-      </div>
-
-      <label for="scrt2Url">SCRT2 URL <span style="color:var(--error)">*</span></label>
-      <input type="text" id="scrt2Url" placeholder="https://xxxx.my.salesforce-scrt.com" />
-
-      <label for="orgId">Organization ID <span style="color:var(--error)">*</span></label>
-      <input type="text" id="orgId" placeholder="00Dxxxxxxxxxxxxxxx" />
-
-      <label for="esDeveloperName">ES Developer Name <span style="color:var(--error)">*</span></label>
-      <input type="text" id="esDeveloperName" placeholder="My_Shopper_Agent_ES" />
-
-      <label for="capabilitiesVersion">Capabilities Version</label>
-      <input type="text" id="capabilitiesVersion" placeholder="65" />
-      <div class="hint">Defaults to 65 if left blank.</div>
+      <label for="paste">Embedded Service Deployment connection JSON</label>
+      <textarea id="paste" placeholder='{ "OrganizationId": "00D...", "DeveloperName": "My_Shopper_Agent_ES", "Url": "https://....my.salesforce-scrt.com" }'></textarea>
 
       <label for="headerText">Chat header label</label>
       <input type="text" id="headerText" placeholder="Shopper Agent" />
 
-      <div class="msg" id="config-msg"></div>
-
       <div class="btn-row">
         <button class="btn btn-primary" id="save-btn" type="button">Connect</button>
+        <button class="btn btn-secondary" id="example-btn" type="button">Load NTO example</button>
         <button class="btn btn-secondary" id="clear-btn" type="button">Clear saved config</button>
       </div>
+
+      <div class="msg" id="config-msg"></div>
+
+      <details id="manual-details" style="margin-top:18px;">
+        <summary style="cursor:pointer; font-size:13px; color:var(--muted);">Enter values manually instead</summary>
+
+        <label for="scrt2Url">SCRT2 URL <span style="color:var(--error)">*</span></label>
+        <input type="text" id="scrt2Url" placeholder="https://xxxx.my.salesforce-scrt.com" />
+
+        <label for="orgId">Organization ID <span style="color:var(--error)">*</span></label>
+        <input type="text" id="orgId" placeholder="00Dxxxxxxxxxxxxxxx" />
+
+        <label for="esDeveloperName">ES Developer Name <span style="color:var(--error)">*</span></label>
+        <input type="text" id="esDeveloperName" placeholder="My_Shopper_Agent_ES" />
+      </details>
     </section>
 
     <!-- Chat stage -->
@@ -174,8 +177,88 @@
       "use strict";
 
       var STORAGE_KEY = "shopperAgentWorkshopConfig";
-      var CDN_VERSION = "1.24.7";
-      var BUNDLE_URL = "https://cdn.search.cimulate.ai/copilot-widget/" + CDN_VERSION + "/messaging.umd.js";
+      // Default pinned widget version for the workshop. The SFRA cartridge
+      // (plugin_commerce_client → configHelper.js DEFAULT_CDN_VERSION) currently
+      // defaults to 1.24.7; bump that in lock-step if the storefront must match.
+      var CDN_VERSION = "1.37.0";
+      var CDN_BASE = "https://cdn.search.cimulate.ai/copilot-widget/";
+
+      // ---- live overrides via URL params (no redeploy needed) ----------------
+      // Read from BOTH the query string (?key=val) and the hash (#key=val). The
+      // hash never reaches a server/log and works cleanly on static hosts; when a
+      // key appears in both, the hash wins. Every param has a default equal to the
+      // normal behavior, so the bare base URL "just works" untouched.
+      //
+      //   cdn=1.37.0         widget CDN version
+      //   bundle=<full-url>  full messaging.umd.js URL (overrides cdn)
+      //   dev=1              developer mode (isDevelopment + logs widget events)
+      //   debug=1            on-screen debug panel (effective config + load errors)
+      //   capv=65            capabilitiesVersion (default 65)
+      //   cartmgmt=0|1       product tiles as in-chat buttons (default 1)
+      //   newtab=0|1         open inline links in a new tab (default 1)
+      //   escalation=0|1     enableEscalationToAgent (default 0)
+      //   primary=%230176d3  theme primary color (URL-encode the leading #)
+      //   header=Text        chat header label
+      //   scrt2= org= es=    prefill/deep-link a connection (also accepts the MIAW
+      //                      names Url / OrganizationId / DeveloperName)
+      //   connect=1          auto-connect when a full connection is available
+      //   reset=1            clear saved config on load
+      //   help=1             list the params on the config screen
+      function parseParams() {
+        var out = {};
+        function absorb(str) {
+          if (!str) return;
+          str.replace(/^[?#]/, "").split("&").forEach(function (pair) {
+            if (!pair) return;
+            var i = pair.indexOf("=");
+            var k = (i < 0 ? pair : pair.slice(0, i)).toLowerCase();
+            var v = i < 0 ? "" : decodeURIComponent(pair.slice(i + 1).replace(/\+/g, " "));
+            if (k) out[k] = v;
+          });
+        }
+        absorb(window.location.search); // query first...
+        absorb(window.location.hash);   // ...hash overrides
+        return out;
+      }
+      var PARAMS = parseParams();
+
+      // Loose boolean: bare key (?dev), "1"/"true"/"yes"/"on" => true; else false.
+      function paramBool(key, dflt) {
+        if (!(key in PARAMS)) return dflt;
+        var v = String(PARAMS[key]).toLowerCase();
+        if (v === "") return true;
+        return ["1", "true", "yes", "on"].indexOf(v) !== -1;
+      }
+      var DEV = paramBool("dev", false);
+      var DEBUG = paramBool("debug", false) || DEV;
+
+      function bundleUrl() {
+        if (PARAMS.bundle) return PARAMS.bundle;
+        return CDN_BASE + (PARAMS.cdn || CDN_VERSION) + "/messaging.umd.js";
+      }
+      var BUNDLE_URL = bundleUrl();
+
+      // ---- debug panel (only when ?debug or ?dev) ----------------------------
+      var debugLines = [];
+      var dbgEl = null;
+      function dlog() {
+        var msg = Array.prototype.slice.call(arguments).join(" ");
+        debugLines.push(msg);
+        if (DEV && window.console) console.log("[ShopperAgentDemo]", msg);
+        if (!DEBUG) return;
+        if (!dbgEl) {
+          dbgEl = document.createElement("div");
+          dbgEl.id = "debug-panel";
+          dbgEl.setAttribute("style",
+            "position:fixed;bottom:8px;right:8px;max-width:min(92vw,440px);max-height:42vh;" +
+            "overflow:auto;z-index:99999;background:rgba(3,45,96,0.94);color:#cfe4ff;" +
+            "font:11px/1.45 ui-monospace,Menlo,monospace;padding:10px 12px;border-radius:8px;" +
+            "white-space:pre-wrap;word-break:break-word;box-shadow:0 6px 24px rgba(0,0,0,0.35)");
+          dbgEl.addEventListener("click", function () { dbgEl.style.display = "none"; });
+          (document.body || document.documentElement).appendChild(dbgEl);
+        }
+        dbgEl.textContent = "▸ debug (click to hide)\n" + debugLines.join("\n");
+      }
 
       var NTO_EXAMPLE = {
         channelAddressIdentifier: "866ca16e-f5c9-49f5-b2b5-250c5f4a34ee",
@@ -210,7 +293,6 @@
         if (obj.Url || obj.scrt2Url) $("scrt2Url").value = obj.Url || obj.scrt2Url || "";
         if (obj.OrganizationId || obj.orgId) $("orgId").value = obj.OrganizationId || obj.orgId || "";
         if (obj.DeveloperName || obj.esDeveloperName) $("esDeveloperName").value = obj.DeveloperName || obj.esDeveloperName || "";
-        if (obj.capabilitiesVersion) $("capabilitiesVersion").value = obj.capabilitiesVersion;
         if (obj.headerText) $("headerText").value = obj.headerText;
       }
 
@@ -219,7 +301,6 @@
           scrt2Url: $("scrt2Url").value.trim(),
           orgId: $("orgId").value.trim(),
           esDeveloperName: $("esDeveloperName").value.trim(),
-          capabilitiesVersion: $("capabilitiesVersion").value.trim() || "65",
           headerText: $("headerText").value.trim() || "Shopper Agent"
         };
       }
@@ -272,45 +353,89 @@
 
         // load the bundle once
         if (!scriptEl) {
+          dlog("loading bundle:", BUNDLE_URL);
           scriptEl = document.createElement("script");
           scriptEl.src = BUNDLE_URL;
           scriptEl.async = true;
           scriptEl.onload = function () {
             if (window.CimulateMessaging && window.CimulateMessaging.injectMessagingWidget) {
+              dlog("bundle loaded OK");
               inject(cfg);
             } else {
+              dlog("ERROR: bundle loaded but window.CimulateMessaging is missing");
               showLoadError();
             }
           };
-          scriptEl.onerror = function () { showLoadError(); };
+          scriptEl.onerror = function () { dlog("ERROR: bundle failed to load:", BUNDLE_URL); showLoadError(); };
           document.head.appendChild(scriptEl);
         }
       }
 
       function inject(cfg) {
+        var opts = {
+          elementId: "chat",
+          mode: "messaging",
+          componentConfig: {
+            isOpen: true,
+            isMinimized: false,
+            options: { dialogFullHeight: true }
+          },
+          messagingConfig: {
+            scrt2Url: cfg.scrt2Url,
+            orgId: cfg.orgId,
+            esDeveloperName: cfg.esDeveloperName,
+            // Fixed at 65 for the workshop; override live with ?capv=NN if needed.
+            capabilitiesVersion: PARAMS.capv || "65",
+            enableEscalationToAgent: paramBool("escalation", false)
+          },
+          // Fallback for any inline markdown links the agent emits: open in a new
+          // tab so the demo page itself never navigates away (?newtab=0 to disable).
+          openLinksInNewTab: paramBool("newtab", true),
+          headerText: cfg.headerText,
+          theme: {
+            primaryColor: PARAMS.primary || "#0176d3"
+          }
+        };
+
+        // Product-card behavior. routingAttributes are validated by MIAW against
+        // the channel's declared conversation parameters. The Commerce Quick Setup
+        // channel declares isCartMgmtSupported as a STRING (lightning__textType,
+        // mapped to the B2CCommerceProductSearch action) — and only since Apr 2026.
+        // Sending it to a channel that doesn't declare it, or as a boolean instead
+        // of a string, makes SCRT2 400 the bootstrap. So this is OPT-IN and sent as
+        // a string; only included when ?cartmgmt=… is explicitly present.
+        //   (omitted)     product cards behave normally (navigate to PDP) — safe default
+        //   #cartmgmt=1   render product cards as in-chat buttons (needs channel support)
+        //   #cartmgmt=0   send the flag explicitly as "false"
+        if ("cartmgmt" in PARAMS) {
+          opts.messagingConfig.routingAttributes = { isCartMgmtSupported: String(paramBool("cartmgmt", true)) };
+        }
+
+        // Developer mode: ask the widget for verbose behavior and stream its
+        // lifecycle events into the debug panel + console for live diagnosis.
+        if (DEV) {
+          opts.isDevelopment = true;
+          opts.onConnect = function () { dlog("event: onConnect"); };
+          opts.onCopilotEvent = function (e) {
+            try { dlog("event:", (e && (e.type || e.name)) || JSON.stringify(e)); } catch (x) { dlog("event: (copilot)"); }
+          };
+        }
+
+        dlog("injecting widget:", JSON.stringify({
+          bundle: BUNDLE_URL,
+          capV: opts.messagingConfig.capabilitiesVersion,
+          cartmgmt: ("cartmgmt" in PARAMS) ? opts.messagingConfig.routingAttributes.isCartMgmtSupported : "(omitted)",
+          newtab: opts.openLinksInNewTab,
+          escalation: opts.messagingConfig.enableEscalationToAgent,
+          primary: opts.theme.primaryColor,
+          dev: !!opts.isDevelopment
+        }));
+
         try {
-          window.CimulateMessaging.injectMessagingWidget({
-            elementId: "chat",
-            mode: "messaging",
-            componentConfig: {
-              isOpen: true,
-              isMinimized: false,
-              options: { dialogFullHeight: true }
-            },
-            messagingConfig: {
-              scrt2Url: cfg.scrt2Url,
-              orgId: cfg.orgId,
-              esDeveloperName: cfg.esDeveloperName,
-              capabilitiesVersion: cfg.capabilitiesVersion,
-              enableEscalationToAgent: false
-            },
-            headerText: cfg.headerText,
-            theme: {
-              primaryColor: "#0176d3"
-            }
-          });
+          window.CimulateMessaging.injectMessagingWidget(opts);
         } catch (e) {
           console.error("[ShopperAgentDemo] injectMessagingWidget failed:", e);
+          dlog("ERROR: injectMessagingWidget threw:", (e && e.message) || String(e));
           showLoadError();
         }
       }
@@ -321,28 +446,32 @@
       }
 
       // ---- events ----
-      $("parse-btn").addEventListener("click", function () {
-        var text = $("paste").value.trim();
-        if (!text) { showMsg("Paste your config JSON first.", "info"); return; }
-        try {
-          fillForm(JSON.parse(text));
-          hideMsg();
-          showMsg("Fields filled from JSON. Review and Connect.", "info");
-        } catch (e) {
-          showMsg("That doesn't look like valid JSON: " + e.message, "error");
-        }
-      });
-
       $("example-btn").addEventListener("click", function () {
         $("paste").value = JSON.stringify(NTO_EXAMPLE, null, 2);
         fillForm(NTO_EXAMPLE);
-        showMsg("Loaded the NTO example. Replace with your own org's values.", "info");
+        showMsg("Loaded the NTO example. Click Connect, or replace with your own org's values.", "info");
       });
 
+      // Connect: if JSON is pasted, parse it into the form first, then validate
+      // and connect. This makes "paste your ESD snippet + Connect" a single click,
+      // while manual entry (paste box empty) still works via the details panel.
       $("save-btn").addEventListener("click", function () {
+        var text = $("paste").value.trim();
+        if (text) {
+          try {
+            fillForm(JSON.parse(text));
+          } catch (e) {
+            showMsg("That doesn't look like valid JSON: " + e.message, "error");
+            return;
+          }
+        }
         var cfg = readForm();
         var err = validate(cfg);
-        if (err) { showMsg(err, "error"); return; }
+        if (err) {
+          showMsg(err + " Paste your ESD JSON above, or open “Enter values manually”.", "error");
+          $("manual-details").open = true;
+          return;
+        }
         saveConfig(cfg);
         // reload so the widget initializes cleanly against the new config
         location.reload();
@@ -351,7 +480,7 @@
       $("clear-btn").addEventListener("click", function () {
         clearConfig();
         $("paste").value = "";
-        ["scrt2Url", "orgId", "esDeveloperName", "capabilitiesVersion", "headerText"].forEach(function (id) { $(id).value = ""; });
+        ["scrt2Url", "orgId", "esDeveloperName", "headerText"].forEach(function (id) { $(id).value = ""; });
         showMsg("Saved config cleared.", "info");
       });
 
@@ -363,11 +492,43 @@
       });
 
       // ---- init ----
-      var existing = loadConfig();
-      if (existing) {
-        mountWidget(existing);
+      if (paramBool("reset", false) || paramBool("clear", false)) {
+        clearConfig();
+        dlog("reset: cleared saved config");
+      }
+
+      // A connection can also come from URL params, so you can bookmark or share a
+      // fully-working demo link. Accepts our names (scrt2/org/es) or the MIAW names.
+      var paramConn = {};
+      if (PARAMS.scrt2 || PARAMS.url) paramConn.scrt2Url = PARAMS.scrt2 || PARAMS.url;
+      if (PARAMS.org || PARAMS.organizationid) paramConn.orgId = PARAMS.org || PARAMS.organizationid;
+      if (PARAMS.es || PARAMS.developername) paramConn.esDeveloperName = PARAMS.es || PARAMS.developername;
+      if (PARAMS.header) paramConn.headerText = PARAMS.header;
+
+      var saved = loadConfig();
+      var merged = (saved || Object.keys(paramConn).length) ? Object.assign({}, saved, paramConn) : null;
+      var complete = merged && merged.scrt2Url && merged.orgId && merged.esDeveloperName;
+
+      if (DEBUG) {
+        dlog("effective settings:", JSON.stringify({
+          bundle: BUNDLE_URL, dev: DEV, capv: PARAMS.capv || "65",
+          cartmgmt: paramBool("cartmgmt", true), newtab: paramBool("newtab", true),
+          escalation: paramBool("escalation", false), primary: PARAMS.primary || "#0176d3",
+          savedConfig: !!saved, paramConn: Object.keys(paramConn)
+        }));
+      }
+
+      if (paramBool("help", false)) {
+        showConfigView(merged);
+        showMsg("URL params: cdn, bundle, dev, debug, capv, cartmgmt, newtab, escalation, primary, header, scrt2/org/es, connect, reset. Use ?key=val or #key=val.", "info");
+      } else if (complete && (saved || paramBool("connect", false))) {
+        // Auto-connect: always for a saved config (unchanged default behavior);
+        // for a params-only connection, only when ?connect=1 so a partial prefill
+        // doesn't fire before you've entered the rest.
+        if (!saved) saveConfig(merged);
+        mountWidget(merged);
       } else {
-        showConfigView(null);
+        showConfigView(merged);
       }
     })();
   </script>
