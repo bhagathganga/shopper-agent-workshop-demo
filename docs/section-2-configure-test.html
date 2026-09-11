@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Section 2 — Configure &amp; test the agent on a standalone page</title>
+</head>
+<body>
+<h1>2. Configure &amp; test the agent on a standalone GitHub page</h1>
+
+<p>You don't need a storefront to try the agent. This demo playground is a single static page that loads the Cimulate chat widget and connects to your agent using the connection JSON you copied in Section 1. Paste, connect, and chat.</p>
+
+<h2>2.1 Open the demo playground</h2>
+<p>Navigate to <a href="https://bhagathganga.github.io/shopper-agent-workshop-demo/">https://bhagathganga.github.io/shopper-agent-workshop-demo/</a>. You'll see a config form. (If you don't, click the <strong>Settings</strong> button in the top-right.)</p>
+
+<h2>2.2 Paste your connection JSON</h2>
+<p>Paste the connection JSON from <strong>Step 1.6</strong> into the config box and click <strong>Fill fields from JSON</strong> — the SCRT2 URL, Organization ID, and ES Developer Name fill in automatically. Give it a <strong>chat header label</strong> (for example, <code>NTO Shopper Agent</code>).</p>
+<blockquote>
+<p><code>{</code><br>
+<code>&nbsp;&nbsp;"channelAddressIdentifier": "942c5e6d-e688-49c0-ad65-c1829e0130f8",</code><br>
+<code>&nbsp;&nbsp;"OrganizationId": "00DjW000000QxVu",</code><br>
+<code>&nbsp;&nbsp;"DeveloperName": "NTOShopperAgent_ES",</code><br>
+<code>&nbsp;&nbsp;"Url": "https://orgfarm-0389a86d66.my.salesforce-scrt.com"</code><br>
+<code>}</code></p>
+</blockquote>
+<p><em>Everything is stored only in your browser. Use your own org's values, not the example above.</em></p>
+
+<h2>2.3 Connect and chat</h2>
+<p>Click <strong>Connect</strong>. The widget loads and the agent greets you with its welcome message.</p>
+<figure>
+<img src="images/section-2/01-welcome.png" alt="The demo page with the chat widget open, showing the NTO Shopper Agent welcome message" style="max-width:100%;border:1px solid #ddd;border-radius:6px;margin:.5rem 0;" />
+</figure>
+<p>Now play around. Try a natural request like <strong>"training for a marathon, what should I buy"</strong> — the agent searches the NTO catalog and returns real products (running shoes, hydration gear) as a browsable carousel with names and prices.</p>
+<figure>
+<img src="images/section-2/02-results.png" alt="The agent responding to a marathon-training query with a carousel of running shoes and hydration gear from the NTO catalog" style="max-width:100%;border:1px solid #ddd;border-radius:6px;margin:.5rem 0;" />
+</figure>
+
+<p><strong>That's it!</strong> You have a working Shopper Agent you can drop into any storefront. Next, personalize how it behaves in Section 3, and give it document-grounded answers in Section 4.</p>
+
+</body>
+</html>

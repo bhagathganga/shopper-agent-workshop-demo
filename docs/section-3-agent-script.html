@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Section 3 — Make the agent your own</title>
+</head>
+<body>
+<h1>3. Make the agent your own</h1>
+
+<p>Personalize the agent script. Change one thing at a time and re-test in your demo app to see the effect.</p>
+
+<h2>3.1 Welcome message</h2>
+<p>The first line the agent says. Find <code>welcome</code> (under <code>system &rarr; messages</code>) and swap in your own name:</p>
+<blockquote><code>Hi, I'm Ava — your personal shopping assistant. What are you looking for today?</code></blockquote>
+
+<h2>3.2 Retailer voice</h2>
+<p>Describe how your agent should sound. This shapes every reply. Find <code>retailer_voice</code> and write your own, for example:</p>
+<blockquote><code>Warm, upbeat concierge. Short, friendly replies. Plain language, at most one emoji, never pushy.</code></blockquote>
+
+<h2>3.3 Add a shoe finder</h2>
+<p>Let's customize the agent to add a <strong>shoe finder</strong>: when a shopper wants footwear, the agent asks for their gender and size, shows the sizes as tappable pills, then searches only in that size — and if that turns up little, it broadens to similar products while staying in that size, never substituting another. This takes two edits — one to guide the search, one to build the pills.</p>
+
+<h3>a) Guide the search — <code>tool_calling_guidance</code></h3>
+<p>Add these rules to the <code>tool_calling_guidance</code> list so the agent asks for gender and size, then searches in that size:</p>
+<blockquote>
+<p><code>"SHOE PREREQUISITE: If the product is footwear, both GENDER and SIZE are required before searching. If both are missing, ask for GENDER FIRST, then size.",</code></p>
+<p><code>"SIZE SEARCHING: Pass the size via refinementConstraints as c_size (e.g., c_size=10.5). Do NOT pass c_gender — the userQuery handles gender.",</code></p>
+<p><code>"SAME-SIZE SEARCH: Once the shopper gives a shoe size, include that c_size on every FOOTWEAR search for the rest of the session. Never run a footwear search that drops c_size. Do NOT apply c_size to apparel — clothing uses letter sizes (S/M/L).",</code></p>
+<p><code>"SAME-SIZE SIMILAR FALLBACK: If the exact query returns few/no results in that size, broaden the userQuery to SIMILAR products (same category/brand/style) while KEEPING c_size. Only show products available in that size; never substitute other sizes."</code></p>
+</blockquote>
+<figure>
+<img src="images/section-3/shoe-01-tool-calling.png" alt="Agent Builder Variables view showing the tool_calling_guidance list with the SHOE PREREQUISITE, SIZE SEARCHING, and SAME-SIZE SEARCH rules" style="max-width:100%;border:1px solid #ddd;border-radius:6px;margin:.5rem 0;" />
+</figure>
+
+<h3>b) Build the size pills — <code>response_guidance</code></h3>
+<p>Add these rules to the <code>response_guidance</code> list. Each size in a ladder becomes one tappable pill. (Sizes verified available in the NTO catalog.)</p>
+<blockquote>
+<p><code>"SHOPPER'S VOICE: Phrase every pill in the shopper's own words (e.g. 'Show me black ones', 'Under $150').",</code></p>
+<p><code>"GENDER PILLS: When asking who the shoes are for, output these three pills: Men's, Women's, Kids.",</code></p>
+<p><code>"SIZE LADDER: When asking for shoe size, output EVERY size in the matching ladder below as its own pill, in order — never skip or sample. Use WOMENS (women's), MENS (men's), or KIDS (child), and always end with 'I wear a different size'.",</code></p>
+<p><code>"WOMENS LADDER: Size 5, Size 5.5, Size 6, Size 6.5, Size 7, Size 7.5, Size 8, Size 8.5, Size 9, Size 9.5, Size 10, Size 10.5, Size 11",</code></p>
+<p><code>"MENS LADDER: Size 7, Size 7.5, Size 8, Size 8.5, Size 9, Size 9.5, Size 10, Size 10.5, Size 11, Size 11.5, Size 12, Size 12.5, Size 13",</code></p>
+<p><code>"KIDS LADDER: Size 1, Size 1.5, Size 2, Size 2.5, Size 3, Size 3.5, Size 4, Size 4.5, Size 5, Size 5.5, Size 6, Size 7, Size 8, Size 9, Size 10, Size 11, Size 12, Size 13"</code></p>
+</blockquote>
+<figure>
+<img src="images/section-3/shoe-02-response-guidance.png" alt="Agent Builder Variables view showing the response_guidance list with the SHOPPER'S VOICE, GENDER PILLS, SIZE LADDER, and WOMENS/MENS/KIDS LADDER rules, and the 255-character warning comment" style="max-width:100%;border:1px solid #ddd;border-radius:6px;margin:.5rem 0;" />
+</figure>
+
+<h3>Test your shoe finder</h3>
+<p>Ask <strong>"show me running shoes"</strong>. The agent should ask for gender, then size (as a row of pills), and after you pick one, show shoes available in that size.</p>
+
+</body>
+</html>
