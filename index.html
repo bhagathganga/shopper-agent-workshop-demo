@@ -400,16 +400,11 @@
         // Product-card behavior. routingAttributes are validated by MIAW against
         // the channel's declared conversation parameters. The Commerce Quick Setup
         // channel declares isCartMgmtSupported as a STRING (lightning__textType,
-        // mapped to the B2CCommerceProductSearch action) — and only since Apr 2026.
-        // Sending it to a channel that doesn't declare it, or as a boolean instead
-        // of a string, makes SCRT2 400 the bootstrap. So this is OPT-IN and sent as
-        // a string; only included when ?cartmgmt=… is explicitly present.
-        //   (omitted)     product cards behave normally (navigate to PDP) — safe default
-        //   #cartmgmt=1   render product cards as in-chat buttons (needs channel support)
-        //   #cartmgmt=0   send the flag explicitly as "false"
-        if ("cartmgmt" in PARAMS) {
-          opts.messagingConfig.routingAttributes = { isCartMgmtSupported: String(paramBool("cartmgmt", true)) };
-        }
+        // mapped to the B2CCommerceProductSearch action). A boolean (not a string)
+        // makes SCRT2 400 the bootstrap. Default on; #cartmgmt=0 to disable.
+        opts.messagingConfig.routingAttributes = {
+          isCartMgmtSupported: String(paramBool("cartmgmt", true))
+        };
 
         // Developer mode: ask the widget for verbose behavior and stream its
         // lifecycle events into the debug panel + console for live diagnosis.
@@ -424,7 +419,7 @@
         dlog("injecting widget:", JSON.stringify({
           bundle: BUNDLE_URL,
           capV: opts.messagingConfig.capabilitiesVersion,
-          cartmgmt: ("cartmgmt" in PARAMS) ? opts.messagingConfig.routingAttributes.isCartMgmtSupported : "(omitted)",
+          cartmgmt: opts.messagingConfig.routingAttributes.isCartMgmtSupported,
           newtab: opts.openLinksInNewTab,
           escalation: opts.messagingConfig.enableEscalationToAgent,
           primary: opts.theme.primaryColor,
