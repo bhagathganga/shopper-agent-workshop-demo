@@ -55,7 +55,7 @@ server or log and works cleanly on static hosts; when a key appears in both, the
 
 | Param | Effect | Default |
 |---|---|---|
-| `cdn=1.34.0` | Widget CDN version | `1.34.0` |
+| `cdn=1.37.0` | Widget CDN version | `1.37.0` |
 | `bundle=<full-url>` | Full `messaging.umd.js` URL (overrides `cdn`) | — |
 | `dev=1` | Developer mode: `isDevelopment` + logs widget lifecycle events | off |
 | `debug=1` | On-screen debug panel: effective config + load/inject errors (click to hide) | off |
