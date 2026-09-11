@@ -177,9 +177,13 @@
       "use strict";
 
       var STORAGE_KEY = "shopperAgentWorkshopConfig";
-      // Default pinned widget version for the workshop. The SFRA cartridge
-      // (plugin_commerce_client → configHelper.js DEFAULT_CDN_VERSION) currently
-      // defaults to 1.24.7; bump that in lock-step if the storefront must match.
+      // Default pinned widget version for the workshop.
+      // Why 1.37.0: v1.36.0 reworked scrolling (sticky "jump to latest" arrow +
+      // corrected auto-scroll); earlier builds like 1.34.1 show a scrolling glitch
+      // during repeated interaction — very visible in a live demo. 1.37.0 (>=1.36.0)
+      // includes that fix and tested clean.
+      // Fallback: 1.34.1 is the build the team session bug-bashed, so pin it live
+      // with #cdn=1.34.1 if a session-stability issue ever shows up on stage.
       var CDN_VERSION = "1.37.0";
       var CDN_BASE = "https://cdn.search.cimulate.ai/copilot-widget/";
 
@@ -194,7 +198,8 @@
       //   dev=1              developer mode (isDevelopment + logs widget events)
       //   debug=1            on-screen debug panel (effective config + load errors)
       //   capv=65            capabilitiesVersion (default 65)
-      //   cartmgmt=0|1       product tiles as in-chat buttons (default 1)
+      //   cartmgmt=0|1       product tiles as in-chat buttons (default: omitted)
+      //   autoscroll=0|1     follow new agent messages (default: widget default = on)
       //   newtab=0|1         open inline links in a new tab (default 1)
       //   escalation=0|1     enableEscalationToAgent (default 0)
       //   primary=%230176d3  theme primary color (URL-encode the leading #)
@@ -411,6 +416,14 @@
           opts.messagingConfig.routingAttributes = { isCartMgmtSupported: String(paramBool("cartmgmt", true)) };
         }
 
+        // Auto-scroll (opt-in). v1.36.0+ follows new agent messages by default and
+        // pauses while the shopper reads older ones (sticky "jump to latest" arrow).
+        // That default is what we want, so we only pass autoScroll when explicitly
+        // set — e.g. #autoscroll=0 to stop the view following agent responses.
+        if ("autoscroll" in PARAMS) {
+          opts.autoScroll = paramBool("autoscroll", true);
+        }
+
         // Developer mode: ask the widget for verbose behavior and stream its
         // lifecycle events into the debug panel + console for live diagnosis.
         if (DEV) {
@@ -425,6 +438,7 @@
           bundle: BUNDLE_URL,
           capV: opts.messagingConfig.capabilitiesVersion,
           cartmgmt: ("cartmgmt" in PARAMS) ? opts.messagingConfig.routingAttributes.isCartMgmtSupported : "(omitted)",
+          autoscroll: ("autoscroll" in PARAMS) ? opts.autoScroll : "(default)",
           newtab: opts.openLinksInNewTab,
           escalation: opts.messagingConfig.enableEscalationToAgent,
           primary: opts.theme.primaryColor,

@@ -60,7 +60,8 @@ server or log and works cleanly on static hosts; when a key appears in both, the
 | `dev=1` | Developer mode: `isDevelopment` + logs widget lifecycle events | off |
 | `debug=1` | On-screen debug panel: effective config + load/inject errors (click to hide) | off |
 | `capv=65` | `capabilitiesVersion` | `65` |
-| `cartmgmt=0\|1` | Product tiles as in-chat buttons (`1`) vs. navigating links (`0`) | `1` |
+| `cartmgmt=0\|1` | Send `isCartMgmtSupported` (product tiles as in-chat buttons). Opt-in — omitted unless set | omitted |
+| `autoscroll=0\|1` | Follow new agent messages (`0` stops the view following responses) | widget default (on) |
 | `newtab=0\|1` | Open inline links in a new tab | `1` |
 | `escalation=0\|1` | `enableEscalationToAgent` | `0` |
 | `primary=%230176d3` | Theme primary color (URL-encode the leading `#`) | `#0176d3` |
@@ -74,7 +75,8 @@ Examples:
 ```
 …/#debug=1                      show the debug panel
 …/#dev=1                        developer mode + event stream
-…/#cdn=1.24.7&cartmgmt=0        older bundle, let product cards navigate
+…/#cdn=1.34.1                   pin the team-bug-bashed build (fallback)
+…/#cartmgmt=1                   opt into in-chat product cards (needs channel support)
 …/#scrt2=https://x.my.salesforce-scrt.com&org=00D…&es=My_ES&connect=1   deep-link
 …/#reset=1                      wipe saved config
 ```
@@ -87,10 +89,11 @@ Examples:
 
 ## Product links & mobile
 
-- **Product cards stay in-chat** (they behave like reply pills) via
-  `routingAttributes.isCartMgmtSupported: true`. Set `#cartmgmt=0` to see the alternative
-  (cards navigate to the storefront PDP). On a real storefront, deep-linking to the PDP is
-  the expected behavior.
+- **Product cards** navigate to the storefront PDP by default. To make them behave like
+  in-chat reply pills, opt in with `#cartmgmt=1` — this sends `isCartMgmtSupported` as a
+  routing attribute, which the channel must declare (Commerce Quick Setup channels created
+  after Apr 2026 do; older/external channels don't, and sending it there causes a 400).
+  It's opt-in precisely so the demo connects against any org out of the box.
 - **Mobile works** — the widget ships responsive CSS + a full-height panel, and this page
   has its own `≤640px` layout. Pre-connect on the phone (config persists), then screen-mirror.
 
