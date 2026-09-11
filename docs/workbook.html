@@ -8,12 +8,14 @@
   :root {
     --brand: #0176d3;
     --brand-dark: #032d60;
-    --bg: #f3f6fb;
+    --bg: #eef2f8;
     --card: #ffffff;
     --border: #d8dde6;
-    --text: #181818;
+    --text: #16325c;
     --muted: #5c6b7a;
-    --code-bg: #f1f4f9;
+    --code-bg: #0d1b2a;
+    --code-fg: #e7edf5;
+    --chip: #eef4fb;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -22,76 +24,184 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background: var(--bg);
     color: var(--text);
-    line-height: 1.55;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
   }
+
+  /* ---------- Hero ---------- */
   header.hero {
-    background: linear-gradient(160deg, var(--brand-dark), var(--brand));
+    background: linear-gradient(135deg, #021b3f 0%, var(--brand-dark) 45%, var(--brand) 100%);
     color: #fff;
-    padding: 40px 24px 34px;
+    padding: 52px 24px 46px;
     text-align: center;
   }
-  header.hero h1 { margin: 0 0 6px; font-size: 28px; }
-  header.hero p { margin: 0; opacity: 0.9; font-size: 15px; }
+  header.hero h1 { margin: 0 0 10px; font-size: 32px; letter-spacing: -.01em; }
+  header.hero p { margin: 0 auto; max-width: 620px; opacity: .92; font-size: 16px; }
+  .hero-badges { margin-top: 18px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .hero-badges span {
+    background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25);
+    padding: 5px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+  }
 
-  .layout { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
+  .layout { max-width: 920px; margin: 0 auto; padding: 0 20px 90px; }
 
+  /* ---------- Table of contents ---------- */
   nav.toc {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px 22px;
-    margin: -24px auto 34px;
-    box-shadow: 0 8px 30px rgba(3,45,96,0.10);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin: -28px auto 34px;
+    box-shadow: 0 12px 40px rgba(3,45,96,.14);
     position: relative;
   }
-  nav.toc h2 { margin: 0 0 10px; font-size: 14px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
-  nav.toc ol { margin: 0; padding-left: 20px; }
-  nav.toc li { margin: 5px 0; }
-  nav.toc a { color: var(--brand); text-decoration: none; font-weight: 600; }
-  nav.toc a:hover { text-decoration: underline; }
+  nav.toc h2 { margin: 0 0 14px; font-size: 12.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  nav.toc ol { margin: 0; padding: 0; list-style: none; counter-reset: toc; display: grid; gap: 8px; }
+  nav.toc li { counter-increment: toc; margin: 0; }
+  nav.toc a {
+    display: flex; align-items: center; gap: 12px;
+    color: var(--brand-dark); text-decoration: none; font-weight: 600;
+    padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+    transition: background .15s, border-color .15s, transform .1s;
+  }
+  nav.toc a::before {
+    content: counter(toc);
+    flex: 0 0 28px; height: 28px; border-radius: 50%;
+    background: var(--brand); color: #fff; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  nav.toc a:hover { background: var(--chip); border-color: var(--brand); transform: translateX(2px); }
 
+  /* ---------- Section cards ---------- */
   section.step {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 8px 30px 26px;
-    margin-bottom: 28px;
-    box-shadow: 0 4px 18px rgba(3,45,96,0.06);
+    border-radius: 14px;
+    padding: 10px 34px 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 22px rgba(3,45,96,.07);
     scroll-margin-top: 20px;
   }
   h1.section-title {
+    display: flex; align-items: center; gap: 14px;
     color: var(--brand-dark);
-    border-bottom: 3px solid var(--brand);
-    padding-bottom: 10px;
-    font-size: 24px;
+    border-bottom: 3px solid #e3ebf5;
+    padding-bottom: 16px; margin-top: 26px;
+    font-size: 25px; letter-spacing: -.01em;
   }
-  h2 { color: var(--brand-dark); font-size: 19px; margin-top: 28px; }
-  h3 { color: var(--text); font-size: 16px; margin-top: 22px; }
+  h1.section-title .num {
+    flex: 0 0 42px; height: 42px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--brand-dark), var(--brand));
+    color: #fff; font-size: 20px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  h2 {
+    color: var(--brand-dark); font-size: 19px; margin-top: 34px;
+    padding-left: 12px; border-left: 4px solid var(--brand);
+  }
+  h3 { color: var(--text); font-size: 15.5px; margin-top: 26px; }
+  h3 code { font-size: 13.5px; }
+  p { margin: 12px 0; }
 
-  code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-  blockquote {
-    margin: 12px 0;
-    padding: 12px 16px;
-    background: var(--code-bg);
-    border-left: 4px solid var(--brand);
-    border-radius: 0 8px 8px 0;
+  code {
+    background: var(--chip); color: #0b3d6b; padding: 1.5px 6px; border-radius: 5px;
+    font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   }
-  blockquote p { margin: 6px 0; }
-  blockquote code { background: transparent; padding: 0; }
-  ol, ul { padding-left: 22px; }
-  li { margin: 10px 0; }
-  figure { margin: 12px 0; }
-  img { max-width: 100%; border: 1px solid var(--border); border-radius: 6px; margin: .4rem 0; display: block; }
+
+  /* ---------- Callouts ---------- */
+  .callout {
+    display: flex; gap: 12px; align-items: flex-start;
+    margin: 18px 0; padding: 14px 16px; border-radius: 10px;
+    border: 1px solid; font-size: 14.5px;
+  }
+  .callout .ico { flex: 0 0 auto; font-size: 18px; line-height: 1.5; }
+  .callout p { margin: 0; }
+  .callout.info { background: #eef5fd; border-color: #bcdcf7; }
+  .callout.warn { background: #fff6e9; border-color: #f4d19b; }
+  .callout.tip  { background: #eefaf1; border-color: #b9e6c6; }
+
+  /* ---------- Config key/value table ---------- */
+  table.kv { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; overflow: hidden; border-radius: 10px; border: 1px solid var(--border); }
+  table.kv th, table.kv td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.kv tr:last-child td { border-bottom: none; }
+  table.kv td.field { width: 210px; color: var(--muted); font-weight: 600; }
+  table.kv td.val { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; word-break: break-word; }
+  table.kv tr.group th {
+    background: var(--brand-dark); color: #fff; font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+    padding: 8px 14px;
+  }
+
+  /* ---------- Comparison / test tables ---------- */
+  table.data { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  table.data th { background: #f2f6fb; color: var(--brand-dark); text-align: left; padding: 11px 14px; font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid var(--border); }
+  table.data td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.data tr:last-child td { border-bottom: none; }
+  table.data td.q { font-style: italic; color: var(--text); }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+  .pill.script { background: #e7f0fb; color: #0b5cad; }
+  .pill.doc { background: #eafaf0; color: #1b7a44; }
+
+  /* ---------- Code cards ---------- */
+  .code-card { margin: 16px 0; border-radius: 10px; overflow: hidden; border: 1px solid #1c3350; box-shadow: 0 6px 18px rgba(3,45,96,.14); }
+  .code-card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #16283f; color: #cfe0f2; padding: 8px 14px; font-size: 12.5px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .code-card-head .dot { color: #ffbf5e; }
+  .code-card pre {
+    margin: 0; background: var(--code-bg); color: var(--code-fg);
+    padding: 16px; overflow-x: auto; font-size: 13px; line-height: 1.6;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .copy-btn {
+    background: rgba(255,255,255,.1); color: #cfe0f2; border: 1px solid rgba(255,255,255,.2);
+    border-radius: 6px; padding: 3px 10px; font-size: 12px; cursor: pointer; transition: background .15s;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,.22); }
+  .copy-btn.copied { background: #1b7a44; color: #fff; border-color: #1b7a44; }
+
+  /* ---------- Steps list ---------- */
+  ol.steps { counter-reset: st; list-style: none; padding: 0; margin: 16px 0; }
+  ol.steps > li {
+    counter-increment: st; position: relative; padding: 2px 0 4px 46px; margin: 0 0 18px;
+  }
+  ol.steps > li::before {
+    content: counter(st); position: absolute; left: 0; top: 0;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--chip); color: var(--brand-dark); border: 1.5px solid var(--brand);
+    font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center;
+  }
+  ul { padding-left: 22px; }
+  li { margin: 8px 0; }
+
+  /* ---------- Figures ---------- */
+  figure { margin: 14px 0; padding: 10px; background: #f7f9fc; border: 1px solid var(--border); border-radius: 12px; display: grid; gap: 10px; }
+  figure img { max-width: 100%; border: 1px solid var(--border); border-radius: 8px; display: block; box-shadow: 0 2px 8px rgba(3,45,96,.08); }
+  figcaption { font-size: 12.5px; color: var(--muted); }
+
   a { color: var(--brand); }
-  .backtop { display: inline-block; margin-top: 14px; font-size: 13px; color: var(--muted); text-decoration: none; }
+  .done { margin-top: 22px; padding: 14px 16px; background: #eefaf1; border: 1px solid #b9e6c6; border-radius: 10px; font-weight: 600; color: #1b7a44; }
+  .backtop { display: inline-block; margin-top: 16px; font-size: 13px; color: var(--muted); text-decoration: none; }
   .backtop:hover { text-decoration: underline; }
+
+  @media (max-width: 620px) {
+    section.step { padding: 8px 18px 22px; }
+    table.kv td.field { width: auto; }
+  }
 </style>
 </head>
 <body>
 
 <header class="hero">
   <h1>How to Launch a Shopper Agent</h1>
-  <p>Step-by-step workshop workbook — build, deploy, customize, and ground a B2C Commerce shopper agent.</p>
+  <p>A step-by-step workbook: build, deploy, customize, and ground a B2C Commerce shopper agent — start to finish.</p>
+  <div class="hero-badges">
+    <span>🛍️ Northern Trail Outfitters</span>
+    <span>⚡ Agentforce</span>
+    <span>🧩 4 sections</span>
+  </div>
 </header>
 
 <div class="layout">
@@ -108,45 +218,57 @@
 
   <!-- ==================== SECTION 1 ==================== -->
   <section class="step" id="section-1">
-    <h1 class="section-title">1. Build a Shopper Agent with Shopper Agent Setup</h1>
+    <h1 class="section-title"><span class="num">1</span> Build a Shopper Agent with Shopper Agent Setup</h1>
 
     <p>You'll stand up a working <strong>B2C Commerce shopper agent</strong> from a single guided form. Point it at the Northern Trail Outfitters (NTO) storefront, click <strong>Create Agent</strong>, and Shopper Agent Setup generates the agent, its subagents, and an Embedded Service deployment for you. At the end you copy a small connection snippet — that's all Section 2 needs to bring the agent to life on a web page.</p>
 
-    <p><em>Prerequisite: a Salesforce trial org. Grab one from <a href="https://orgfarm.salesforce.com/signup">orgfarm.salesforce.com/signup</a> with Event Code <strong>JD582MF2</strong> (available for one week).</em></p>
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p><strong>Prerequisite:</strong> a Salesforce trial org. Grab one from <a href="https://orgfarm.salesforce.com/signup">orgfarm.salesforce.com/signup</a> with Event Code <strong>JD582MF2</strong> (available for one week).</p>
+    </div>
 
     <h2>1.1 Open Commerce Shopper Agent Setup</h2>
     <p>In <strong>Setup</strong>, use <strong>Quick Find</strong> to search <code>commerce</code>, then open <strong>Commerce Shopper Agent Setup</strong> (under Feature Settings &rarr; Commerce).</p>
     <figure>
       <img src="images/section-1/01-nav-setup.png" alt="Setup Quick Find showing commerce, with Commerce Shopper Agent Setup highlighted in the tree" />
+      <figcaption>Setup &rarr; Quick Find &ldquo;commerce&rdquo; &rarr; Commerce Shopper Agent Setup.</figcaption>
     </figure>
 
     <h2>1.2 Fill in the agent details</h2>
     <p>The form opens with placeholder examples. Northern Trail Outfitters is a demo storefront that sells outdoor apparel — use these instance details:</p>
-    <blockquote>
-      <p><code>Agent Type: Agent Script (Enhanced Search)</code><br>
-      <code>Agent User: Create a new user</code><br>
-      <code>Agent Name: NTOShopperAgent</code><br>
-      <code>Company: Northern Trail Outfitters</code></p>
-      <p><code>Storefront Type: SFRA</code><br>
-      <code>B2C Org ID: f_ecom_tbhc_prd</code><br>
-      <code>Site ID: nto</code><br>
-      <code>Storefront URL: https://www.shop.prd.tbhc.sfcc-store-internal.net/on/demandware.store/Sites-nto-Site</code><br>
-      <code>Locale: en-US</code><br>
-      <code>CDN Hostname: https://s3.amazonaws.com</code></p>
-      <p><code>Commerce API URL: https://.api.commercecloud.salesforce.com</code><br>
-      <code>SLAS Client ID: a581cb19-12e9-4620-bb77-8551b51ad56e</code><br>
-      <code>SLAS Client Secret: 7R4OlmAFtpujGOZ0Ur36K3wMpoN9YVFbGSCHf_Wrba8</code></p>
-    </blockquote>
-    <p><em>The SLAS Client Secret above is for this event only and will be rotated afterward.</em></p>
+    <table class="kv">
+      <tr class="group"><th colspan="2">Agent Details</th></tr>
+      <tr><td class="field">Agent Type</td><td class="val">Agent Script (Enhanced Search)</td></tr>
+      <tr><td class="field">Agent User</td><td class="val">Create a new user</td></tr>
+      <tr><td class="field">Agent Name</td><td class="val">NTOShopperAgent</td></tr>
+      <tr><td class="field">Company</td><td class="val">Northern Trail Outfitters</td></tr>
+      <tr class="group"><th colspan="2">Salesforce Commerce Cloud (B2C)</th></tr>
+      <tr><td class="field">Storefront Type</td><td class="val">SFRA</td></tr>
+      <tr><td class="field">B2C Org ID</td><td class="val">f_ecom_tbhc_prd</td></tr>
+      <tr><td class="field">Site ID</td><td class="val">nto</td></tr>
+      <tr><td class="field">Storefront URL</td><td class="val">https://www.shop.prd.tbhc.sfcc-store-internal.net/on/demandware.store/Sites-nto-Site</td></tr>
+      <tr><td class="field">Locale</td><td class="val">en-US</td></tr>
+      <tr><td class="field">CDN Hostname</td><td class="val">https://s3.amazonaws.com</td></tr>
+      <tr class="group"><th colspan="2">SLAS (Shopper Login &amp; API Access)</th></tr>
+      <tr><td class="field">Commerce API URL</td><td class="val">https://.api.commercecloud.salesforce.com</td></tr>
+      <tr><td class="field">SLAS Client ID</td><td class="val">a581cb19-12e9-4620-bb77-8551b51ad56e</td></tr>
+      <tr><td class="field">SLAS Client Secret</td><td class="val">7R4OlmAFtpujGOZ0Ur36K3wMpoN9YVFbGSCHf_Wrba8</td></tr>
+    </table>
+    <div class="callout warn">
+      <span class="ico">⚠️</span>
+      <p>The <strong>SLAS Client Secret</strong> above is for this event only and will be rotated afterward.</p>
+    </div>
     <figure>
       <img src="images/section-1/02-form-empty.png" alt="The empty Commerce Shopper Agent Setup form with placeholder examples for Storefront Type, B2C Org ID, Site ID, Storefront URL, and SLAS configuration" />
       <img src="images/section-1/03-form-filled.png" alt="The setup form filled with NTO values and the Create Agent button" />
+      <figcaption>The empty form (top) and the same form filled with the NTO values above (bottom).</figcaption>
     </figure>
 
     <h2>1.3 Create the agent</h2>
     <p>Click <strong>Create Agent</strong>. You'll get a <strong>Success</strong> toast — the agent build runs in the background and finishes in about two minutes (you'll get an in-app notification).</p>
     <figure>
       <img src="images/section-1/04-creation-started.png" alt="Success toast reading Agent creation process has been started. The job will run in the background." />
+      <figcaption>Success toast: &ldquo;Agent creation process has been started.&rdquo;</figcaption>
     </figure>
 
     <h2>1.4 Review and activate the agent</h2>
@@ -168,132 +290,165 @@
     <figure>
       <img src="images/section-1/08-new-deployment.png" alt="New Embedded Service deployment wizard with Enhanced Chat selected" />
     </figure>
-    <p>Finish the wizard to create the deployment (here <strong>NTOShopperAgent_ES</strong>). Make sure it's <strong>Active</strong>.</p>
+    <p>Finish the wizard to create the deployment (here <strong>NTOShopperAgent_ES</strong>) and make sure it's <strong>Active</strong>.</p>
     <figure>
       <img src="images/section-1/09-deployment-active.png" alt="The NTOShopperAgent_ES Custom Client Deployment page marked Active, with Pre-Chat, Push Notifications, and Code Snippet tiles" />
     </figure>
+    <div class="callout tip">
+      <span class="ico">💡</span>
+      <p>The page carries a banner: <em>&ldquo;After you edit a deployment, publish your changes.&rdquo;</em> A freshly created deployment is already Active — but any time you <strong>edit</strong> it later, click <strong>Publish</strong> to push the change live.</p>
+    </div>
 
     <h2>1.6 Get the connection snippet</h2>
     <p>On the deployment page, click <strong>Install Code Snippet</strong> &rarr; <strong>Get Code</strong>, then <strong>Copy to Clipboard</strong>. You only need the connection values (not the full script) for the demo page in Section 2:</p>
-    <blockquote>
-      <p><code>{</code><br>
-      <code>&nbsp;&nbsp;"channelAddressIdentifier": "942c5e6d-e688-49c0-ad65-c1829e0130f8",</code><br>
-      <code>&nbsp;&nbsp;"OrganizationId": "00DjW000000QxVu",</code><br>
-      <code>&nbsp;&nbsp;"DeveloperName": "NTOShopperAgent_ES",</code><br>
-      <code>&nbsp;&nbsp;"Url": "https://orgfarm-0389a86d66.my.salesforce-scrt.com"</code><br>
-      <code>}</code></p>
-    </blockquote>
-    <p><em>These values are unique to your org and deployment — copy your own; don't reuse the example above.</em></p>
+    <div class="code-card">
+      <div class="code-card-head"><span><span class="dot">●</span> connection.json</span><button class="copy-btn">Copy</button></div>
+      <pre>{
+  "channelAddressIdentifier": "942c5e6d-e688-49c0-ad65-c1829e0130f8",
+  "OrganizationId": "00DjW000000QxVu",
+  "DeveloperName": "NTOShopperAgent_ES",
+  "Url": "https://orgfarm-0389a86d66.my.salesforce-scrt.com"
+}</pre>
+    </div>
+    <div class="callout warn">
+      <span class="ico">⚠️</span>
+      <p>These values are unique to your org and deployment — <strong>copy your own</strong>; don't reuse the example above.</p>
+    </div>
     <figure>
       <img src="images/section-1/10-code-snippet.png" alt="The Custom Client Code Snippet page showing the connection JSON selected and the Copy to Clipboard button" />
     </figure>
 
-    <p><strong>That's it!</strong> You now have a working Shopper Agent and the connection details to deploy it.</p>
+    <p class="done">✅ You now have a working Shopper Agent and the connection details to deploy it.</p>
     <a class="backtop" href="#top">↑ Back to contents</a>
   </section>
 
   <!-- ==================== SECTION 2 ==================== -->
   <section class="step" id="section-2">
-    <h1 class="section-title">2. Configure &amp; test the agent on a standalone page</h1>
+    <h1 class="section-title"><span class="num">2</span> Configure &amp; test the agent on a standalone page</h1>
 
     <p>You don't need a storefront to try the agent. This demo playground is a single static page that loads the Cimulate chat widget and connects to your agent using the connection JSON you copied in Section 1. Paste, connect, and chat.</p>
 
     <h2>2.1 Open the demo playground</h2>
-    <p>Navigate to <a href="https://bhagathganga.github.io/shopper-agent-workshop-demo/">https://bhagathganga.github.io/shopper-agent-workshop-demo/</a>. You'll see a config form. (If you don't, click the <strong>Settings</strong> button in the top-right.)</p>
+    <p>Navigate to <a href="https://bhagathganga.github.io/shopper-agent-workshop-demo/">bhagathganga.github.io/shopper-agent-workshop-demo</a>. You'll see a config form. (If you don't, click the <strong>Settings</strong> button in the top-right.)</p>
 
     <h2>2.2 Paste your connection JSON</h2>
     <p>Paste the connection JSON from <strong>Step 1.6</strong> into the config box and click <strong>Fill fields from JSON</strong> — the SCRT2 URL, Organization ID, and ES Developer Name fill in automatically. Give it a <strong>chat header label</strong> (for example, <code>NTO Shopper Agent</code>).</p>
-    <blockquote>
-      <p><code>{</code><br>
-      <code>&nbsp;&nbsp;"channelAddressIdentifier": "942c5e6d-e688-49c0-ad65-c1829e0130f8",</code><br>
-      <code>&nbsp;&nbsp;"OrganizationId": "00DjW000000QxVu",</code><br>
-      <code>&nbsp;&nbsp;"DeveloperName": "NTOShopperAgent_ES",</code><br>
-      <code>&nbsp;&nbsp;"Url": "https://orgfarm-0389a86d66.my.salesforce-scrt.com"</code><br>
-      <code>}</code></p>
-    </blockquote>
-    <p><em>Everything is stored only in your browser. Use your own org's values, not the example above.</em></p>
+    <div class="code-card">
+      <div class="code-card-head"><span><span class="dot">●</span> connection.json</span><button class="copy-btn">Copy</button></div>
+      <pre>{
+  "channelAddressIdentifier": "942c5e6d-e688-49c0-ad65-c1829e0130f8",
+  "OrganizationId": "00DjW000000QxVu",
+  "DeveloperName": "NTOShopperAgent_ES",
+  "Url": "https://orgfarm-0389a86d66.my.salesforce-scrt.com"
+}</pre>
+    </div>
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p>Everything is stored only in your browser. Use <strong>your own</strong> org's values, not the example above.</p>
+    </div>
 
     <h2>2.3 Connect and chat</h2>
     <p>Click <strong>Connect</strong>. The widget loads and the agent greets you with its welcome message.</p>
     <figure>
       <img src="images/section-2/01-welcome.png" alt="The demo page with the chat widget open, showing the NTO Shopper Agent welcome message" />
     </figure>
-    <p>Now play around. Try a natural request like <strong>"training for a marathon, what should I buy"</strong> — the agent searches the NTO catalog and returns real products (running shoes, hydration gear) as a browsable carousel with names and prices.</p>
+    <p>Now play around. Try a natural request like <strong>&ldquo;training for a marathon, what should I buy&rdquo;</strong> — the agent searches the NTO catalog and returns real products (running shoes, hydration gear) as a browsable carousel with names and prices.</p>
     <figure>
       <img src="images/section-2/02-results.png" alt="The agent responding to a marathon-training query with a carousel of running shoes and hydration gear from the NTO catalog" />
     </figure>
 
-    <p><strong>That's it!</strong> You have a working Shopper Agent you can drop into any storefront.</p>
+    <p class="done">✅ You have a working Shopper Agent you can drop into any storefront.</p>
     <a class="backtop" href="#top">↑ Back to contents</a>
   </section>
 
   <!-- ==================== SECTION 3 ==================== -->
   <section class="step" id="section-3">
-    <h1 class="section-title">3. Make the agent your own</h1>
+    <h1 class="section-title"><span class="num">3</span> Make the agent your own</h1>
 
     <p>Personalize the agent script. Change one thing at a time and re-test in your demo app to see the effect.</p>
 
     <h2>3.1 Welcome message</h2>
     <p>The first line the agent says. Find <code>welcome</code> (under <code>system &rarr; messages</code>) and swap in your own name:</p>
-    <blockquote><code>Hi, I'm Ava — your personal shopping assistant. What are you looking for today?</code></blockquote>
+    <div class="code-card">
+      <div class="code-card-head"><span><span class="dot">●</span> welcome</span><button class="copy-btn">Copy</button></div>
+      <pre>Hi, I'm Ava — your personal shopping assistant. What are you looking for today?</pre>
+    </div>
 
     <h2>3.2 Retailer voice</h2>
     <p>Describe how your agent should sound. This shapes every reply. Find <code>retailer_voice</code> and write your own, for example:</p>
-    <blockquote><code>Warm, upbeat concierge. Short, friendly replies. Plain language, at most one emoji, never pushy.</code></blockquote>
+    <div class="code-card">
+      <div class="code-card-head"><span><span class="dot">●</span> retailer_voice</span><button class="copy-btn">Copy</button></div>
+      <pre>Warm, upbeat concierge. Short, friendly replies. Plain language, at most one emoji, never pushy.</pre>
+    </div>
 
     <h2>3.3 Add a shoe finder</h2>
     <p>Let's customize the agent to add a <strong>shoe finder</strong>: when a shopper wants footwear, the agent asks for their gender and size, shows the sizes as tappable pills, then searches only in that size — and if that turns up little, it broadens to similar products while staying in that size, never substituting another. This takes two edits — one to guide the search, one to build the pills.</p>
 
+    <div class="callout warn">
+      <span class="ico">⚠️</span>
+      <p>Keep each rule string under <strong>255 characters</strong>. Agent Builder rejects the commit if any single variable value string exceeds that limit — and <code>sf agent validate</code> won't catch it.</p>
+    </div>
+
     <h3>a) Guide the search — <code>tool_calling_guidance</code></h3>
     <p>Add these rules to the <code>tool_calling_guidance</code> list so the agent asks for gender and size, then searches in that size:</p>
-    <blockquote>
-      <p><code>"SHOE PREREQUISITE: If the product is footwear, both GENDER and SIZE are required before searching. If both are missing, ask for GENDER FIRST, then size.",</code></p>
-      <p><code>"SIZE SEARCHING: Pass the size via refinementConstraints as c_size (e.g., c_size=10.5). Do NOT pass c_gender — the userQuery handles gender.",</code></p>
-      <p><code>"SAME-SIZE SEARCH: Once the shopper gives a shoe size, include that c_size on every FOOTWEAR search for the rest of the session. Never run a footwear search that drops c_size. Do NOT apply c_size to apparel — clothing uses letter sizes (S/M/L).",</code></p>
-      <p><code>"SAME-SIZE SIMILAR FALLBACK: If the exact query returns few/no results in that size, broaden the userQuery to SIMILAR products (same category/brand/style) while KEEPING c_size. Only show products available in that size; never substitute other sizes."</code></p>
-    </blockquote>
+    <div class="code-card">
+      <div class="code-card-head"><span><span class="dot">●</span> tool_calling_guidance</span><button class="copy-btn">Copy</button></div>
+      <pre>"SHOE PREREQUISITE: If the product is footwear, both GENDER and SIZE are required before searching. If both are missing, ask for GENDER FIRST, then size.",
+"SIZE SEARCHING: Pass the size via refinementConstraints as c_size (e.g., c_size=10.5). Do NOT pass c_gender — the userQuery handles gender.",
+"SAME-SIZE SEARCH: Once the shopper gives a shoe size, include that c_size on every FOOTWEAR search for the rest of the session. Never run a footwear search that drops c_size. Do NOT apply c_size to apparel — clothing uses letter sizes (S/M/L).",
+"SAME-SIZE SIMILAR FALLBACK: If the exact query returns few/no results in that size, broaden the userQuery to SIMILAR products (same category/brand/style) while KEEPING c_size. Only show products available in that size; never substitute other sizes."</pre>
+    </div>
     <figure>
       <img src="images/section-3/shoe-01-tool-calling.png" alt="Agent Builder Variables view showing the tool_calling_guidance list with the SHOE PREREQUISITE, SIZE SEARCHING, and SAME-SIZE SEARCH rules" />
     </figure>
 
     <h3>b) Build the size pills — <code>response_guidance</code></h3>
     <p>Add these rules to the <code>response_guidance</code> list. Each size in a ladder becomes one tappable pill. (Sizes verified available in the NTO catalog.)</p>
-    <blockquote>
-      <p><code>"SHOPPER'S VOICE: Phrase every pill in the shopper's own words (e.g. 'Show me black ones', 'Under $150').",</code></p>
-      <p><code>"GENDER PILLS: When asking who the shoes are for, output these three pills: Men's, Women's, Kids.",</code></p>
-      <p><code>"SIZE LADDER: When asking for shoe size, output EVERY size in the matching ladder below as its own pill, in order — never skip or sample. Use WOMENS (women's), MENS (men's), or KIDS (child), and always end with 'I wear a different size'.",</code></p>
-      <p><code>"WOMENS LADDER: Size 5, Size 5.5, Size 6, Size 6.5, Size 7, Size 7.5, Size 8, Size 8.5, Size 9, Size 9.5, Size 10, Size 10.5, Size 11",</code></p>
-      <p><code>"MENS LADDER: Size 7, Size 7.5, Size 8, Size 8.5, Size 9, Size 9.5, Size 10, Size 10.5, Size 11, Size 11.5, Size 12, Size 12.5, Size 13",</code></p>
-      <p><code>"KIDS LADDER: Size 1, Size 1.5, Size 2, Size 2.5, Size 3, Size 3.5, Size 4, Size 4.5, Size 5, Size 5.5, Size 6, Size 7, Size 8, Size 9, Size 10, Size 11, Size 12, Size 13"</code></p>
-    </blockquote>
+    <div class="code-card">
+      <div class="code-card-head"><span><span class="dot">●</span> response_guidance</span><button class="copy-btn">Copy</button></div>
+      <pre>"SHOPPER'S VOICE: Phrase every pill in the shopper's own words (e.g. 'Show me black ones', 'Under $150').",
+"GENDER PILLS: When asking who the shoes are for, output these three pills: Men's, Women's, Kids.",
+"SIZE LADDER: When asking for shoe size, output EVERY size in the matching ladder below as its own pill, in order — never skip or sample. Use WOMENS (women's), MENS (men's), or KIDS (child), and always end with 'I wear a different size'.",
+"WOMENS LADDER: Size 5, Size 5.5, Size 6, Size 6.5, Size 7, Size 7.5, Size 8, Size 8.5, Size 9, Size 9.5, Size 10, Size 10.5, Size 11",
+"MENS LADDER: Size 7, Size 7.5, Size 8, Size 8.5, Size 9, Size 9.5, Size 10, Size 10.5, Size 11, Size 11.5, Size 12, Size 12.5, Size 13",
+"KIDS LADDER: Size 1, Size 1.5, Size 2, Size 2.5, Size 3, Size 3.5, Size 4, Size 4.5, Size 5, Size 5.5, Size 6, Size 7, Size 8, Size 9, Size 10, Size 11, Size 12, Size 13"</pre>
+    </div>
     <figure>
       <img src="images/section-3/shoe-02-response-guidance.png" alt="Agent Builder Variables view showing the response_guidance list with the SHOPPER'S VOICE, GENDER PILLS, SIZE LADDER, and WOMENS/MENS/KIDS LADDER rules, and the 255-character warning comment" />
     </figure>
 
     <h3>Test your shoe finder</h3>
-    <p>Ask <strong>"show me running shoes"</strong>. The agent should ask for gender, then size (as a row of pills), and after you pick one, show shoes available in that size.</p>
+    <p>Ask <strong>&ldquo;show me running shoes&rdquo;</strong>. The agent should ask for gender, then size (as a row of pills), and after you pick one, show shoes available in that size.</p>
     <a class="backtop" href="#top">↑ Back to contents</a>
   </section>
 
   <!-- ==================== SECTION 4 ==================== -->
   <section class="step" id="section-4">
-    <h1 class="section-title">4. Give the agent knowledge from documents</h1>
+    <h1 class="section-title"><span class="num">4</span> Give the agent knowledge from documents</h1>
 
-    <p>The agent script shapes <em>behavior</em>. It carries just enough site knowledge to answer basics like &ldquo;do you accept returns?&rdquo; &mdash; but the detail (exact windows, edge cases, the full privacy statement) doesn't belong in a script. That <em>knowledge</em> lives in documents. You load them into an <strong>Agentforce Data Library</strong>, and the packaged <strong>B2C Commerce Site FAQs</strong> action reads the right passage at runtime &mdash; grounded, no script change.</p>
+    <p>The agent script shapes <em>behavior</em>. It carries just enough site knowledge to answer basics like &ldquo;do you accept returns?&rdquo; — but the detail (exact windows, edge cases, the full privacy statement) doesn't belong in a script. That <em>knowledge</em> lives in documents. You load them into an <strong>Agentforce Data Library</strong>, and the packaged <strong>B2C Commerce Site FAQs</strong> action reads the right passage at runtime — grounded, no script change.</p>
 
     <p>The difference is basic vs. detailed:</p>
-    <blockquote>
-      <p>&ldquo;Do you accept returns?&rdquo; &rarr; <strong>yes</strong> (already in the script).<br>
-      &ldquo;How long, and does it need original packaging?&rdquo; &rarr; <strong>28 days, unworn, with the Returns Form</strong> (from the doc).</p>
-      <p>&ldquo;Do you ship orders?&rdquo; &rarr; <strong>yes</strong> (already in the script).<br>
-      &ldquo;Which carrier, and how fast?&rdquo; &rarr; <strong>UPS Standard, dispatched within 2 working days</strong> (from the doc).</p>
-    </blockquote>
+    <table class="data">
+      <thead>
+        <tr><th>Shopper asks</th><th>Answer</th><th>Comes from</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="q">&ldquo;Do you accept returns?&rdquo;</td><td>Yes</td><td><span class="pill script">Script</span></td></tr>
+        <tr><td class="q">&ldquo;How long, and does it need original packaging?&rdquo;</td><td>28 days, unworn, with the Returns Form</td><td><span class="pill doc">Document</span></td></tr>
+        <tr><td class="q">&ldquo;Do you ship orders?&rdquo;</td><td>Yes</td><td><span class="pill script">Script</span></td></tr>
+        <tr><td class="q">&ldquo;Which carrier, and how fast?&rdquo;</td><td>UPS Standard, dispatched within 2 working days</td><td><span class="pill doc">Document</span></td></tr>
+      </tbody>
+    </table>
 
-    <p><em>Prerequisite (already set up for this workshop org): Agentforce and Data Cloud are enabled.</em></p>
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p><strong>Prerequisite</strong> (already set up for this workshop org): Agentforce and Data Cloud are enabled.</p>
+    </div>
 
     <h2>4.1 Upload the Site FAQ to a Data Library</h2>
-    <p>Load one file &mdash; <code>NTO Site FAQ.pdf</code> (shipping, returns, contact, and privacy) &mdash; into a library named <code>NTOSiteFAQ</code>. That name becomes the library's <strong>API name</strong>, which you'll reference in the next step.</p>
-    <ol>
+    <p>Load one file — <code>NTO Site FAQ.pdf</code> (shipping, returns, contact, and privacy) — into a library named <code>NTOSiteFAQ</code>. That name becomes the library's <strong>API name</strong>, which you'll reference in the next step.</p>
+    <ol class="steps">
       <li>In <strong>Setup</strong>, use <strong>Quick Find</strong> to search <code>agentforce data</code> and open <strong>Agentforce Data Library</strong>.
         <figure>
           <img src="images/section-4/upload-01-nav.png" alt="Setup Quick Find showing the Agentforce Data Library entry under Einstein" />
@@ -309,7 +464,7 @@
           <img src="images/section-4/upload-03-new-library.png" alt="New data library form with Name and API Name set to NTOSiteFAQ and the PDF added" />
         </figure>
       </li>
-      <li>The library indexes automatically &mdash; it walks through creating data lake objects, a search index, a retriever, and indexing the files.
+      <li>The library indexes automatically — it walks through creating data lake objects, a search index, a retriever, and indexing the files.
         <figure>
           <img src="images/section-4/upload-04-indexing.png" alt="Library status In Progress, indexing the uploaded files" />
         </figure>
@@ -323,7 +478,7 @@
 
     <h2>4.2 Add the B2C Commerce Site FAQs action</h2>
     <p>Everything here happens in <strong>Agent Builder</strong>. You add a packaged subagent, point its action at your library, and remove the placeholder FAQ subagent.</p>
-    <ol>
+    <ol class="steps">
       <li>In the <strong>Explorer</strong>, next to <strong>Subagents</strong>, click <strong>+</strong> &rarr; <strong>Add from Asset Library</strong>.
         <figure>
           <img src="images/section-4/01-add-from-asset-library.png" alt="The Subagents + menu open in Agent Builder, showing Add from Asset Library" />
@@ -335,8 +490,11 @@
           <img src="images/section-4/03-added-to-router.png" alt="Toast confirming B2CCommerceSiteFAQs was added to the Agent Router" />
         </figure>
       </li>
-      <li>Open the new <strong>B2C Commerce Site FAQs</strong> subagent and find its <code>actions</code> block. On the <code>AnswerSiteFAQs</code> action, set the library API name:
-        <blockquote><code>with libraryApiNamesCsv=NTOSiteFAQ</code></blockquote>
+      <li>Open the new <strong>B2C Commerce Site FAQs</strong> subagent and find its <code>actions</code> block. On the <code>AnswerSiteFAQs</code> action, set the library API name to <code>NTOSiteFAQ</code>:
+        <div class="code-card">
+          <div class="code-card-head"><span><span class="dot">●</span> AnswerSiteFAQs</span><button class="copy-btn">Copy</button></div>
+          <pre>with libraryApiNamesCsv=NTOSiteFAQ</pre>
+        </div>
         (leave <code>topCount=3</code> and <code>minimumScore=0.7</code> as-is).
         <figure>
           <img src="images/section-4/04-library-api-name.png" alt="The AnswerSiteFAQs action block with libraryApiNamesCsv set to NTOSiteFAQ" />
@@ -353,12 +511,12 @@
           <img src="images/section-4/07-saved.png" alt="Toasts confirming changes were saved and site_faq was removed from the Agent Router" />
         </figure>
       </li>
-      <li><strong>Commit</strong> the version to lock in a snapshot &mdash; click <strong>Commit</strong> and confirm in the <em>Commit this version?</em> dialog.
+      <li><strong>Commit</strong> the version to lock in a snapshot — click <strong>Commit</strong> and confirm in the <em>Commit this version?</em> dialog.
         <figure>
           <img src="images/section-4/commit-01.png" alt="The Commit this version? dialog in Agent Builder" />
         </figure>
       </li>
-      <li><strong>Activate</strong> the committed version so it goes live &mdash; confirm in the <em>Ready to activate your agent?</em> dialog. This deactivates the previously active version.
+      <li><strong>Activate</strong> the committed version so it goes live — confirm in the <em>Ready to activate your agent?</em> dialog. This deactivates the previously active version.
         <figure>
           <img src="images/section-4/activate-02.png" alt="The Ready to activate your agent? dialog in Agent Builder" />
         </figure>
@@ -367,17 +525,42 @@
 
     <h3>Test it</h3>
     <p>In the <strong>Conversation Preview</strong> (or your demo app), ask questions answered only in the doc:</p>
-    <blockquote>
-      <p><code>Which shipping carrier do you use?</code> &nbsp;&rarr;&nbsp; UPS Standard</p>
-      <p><code>What's your return window?</code> &nbsp;&rarr;&nbsp; 28 days</p>
-      <p><code>Can I have my personal data deleted?</code> &nbsp;&rarr;&nbsp; contact the Data Protection Officer</p>
-    </blockquote>
-    <p>If it says it can't find the answer, check that the library is <strong>Ready</strong> and that <code>libraryApiNamesCsv</code> matches the library's API name exactly.</p>
+    <table class="data">
+      <thead>
+        <tr><th>Ask this</th><th>You should get</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="q">Which shipping carrier do you use?</td><td>UPS Standard</td></tr>
+        <tr><td class="q">What's your return window?</td><td>28 days</td></tr>
+        <tr><td class="q">Can I have my personal data deleted?</td><td>Contact the Data Protection Officer</td></tr>
+      </tbody>
+    </table>
+    <div class="callout warn">
+      <span class="ico">⚠️</span>
+      <p>If it says it can't find the answer, check that the library is <strong>Ready</strong> and that <code>libraryApiNamesCsv</code> matches the library's API name exactly.</p>
+    </div>
 
-    <p><em>Optional: the same pattern works for product FAQs &mdash; upload a product-FAQ document to its own library and add the packaged <strong>B2C Commerce Product FAQs</strong> action, pointing it at that library for detailed per-product answers.</em></p>
+    <div class="callout tip">
+      <span class="ico">💡</span>
+      <p><strong>Optional:</strong> the same pattern works for product FAQs — upload a product-FAQ document to its own library and add the packaged <strong>B2C Commerce Product FAQs</strong> action, pointing it at that library for detailed per-product answers.</p>
+    </div>
     <a class="backtop" href="#top">↑ Back to contents</a>
   </section>
 
 </div>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var pre = btn.closest('.code-card').querySelector('pre');
+      navigator.clipboard.writeText(pre.innerText).then(function () {
+        var old = btn.textContent;
+        btn.textContent = 'Copied ✓';
+        btn.classList.add('copied');
+        setTimeout(function () { btn.textContent = old; btn.classList.remove('copied'); }, 1500);
+      });
+    });
+  });
+</script>
 </body>
 </html>
