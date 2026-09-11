@@ -30,7 +30,7 @@
 <code>Storefront URL: https://www.shop.prd.tbhc.sfcc-store-internal.net/on/demandware.store/Sites-nto-Site</code><br>
 <code>Locale: en-US</code><br>
 <code>CDN Hostname: https://s3.amazonaws.com</code></p>
-<p><code>Commerce API URL: https://.api.commercecloud.salesforce.com</code><br>
+<p><code>Commerce API URL: https://sandbox-001.api.commercecloud.salesforce.com</code><br>
 <code>SLAS Client ID: a581cb19-12e9-4620-bb77-8551b51ad56e</code><br>
 <code>SLAS Client Secret: 7R4OlmAFtpujGOZ0Ur36K3wMpoN9YVFbGSCHf_Wrba8</code></p>
 </blockquote>
@@ -55,6 +55,7 @@
 <figure>
 <img src="images/section-1/06-builder.png" alt="Agentforce Builder showing the NTOShopperAgent agent definition script and the Subagents tree in the Explorer" style="max-width:100%;border:1px solid #ddd;border-radius:6px;margin:.5rem 0;" />
 </figure>
+<p><strong>⚠️ Troubleshooting — agent fails while fetching an access token in Builder?</strong> Go to <strong>Setup &rarr; Named Credentials</strong> and find the three generated credentials ending in <code>_ANC</code>, <code>_GNC</code>, and <code>_SFNC</code>. On each, add a <strong>Custom Header</strong> named <code>x-mostly-harmless</code> with value <code>DF26</code> at the next available sequence, then save. If there's no <code>_SFNC</code>, just do <code>_ANC</code> and <code>_GNC</code>.</p>
 <p>Click <strong>Activate</strong> (top-right) and confirm <em>Ready to activate your agent?</em> &rarr; <strong>Activate</strong>. This makes the version live on the channels it's connected to.</p>
 <figure>
 <img src="images/section-1/07-activate.png" alt="Ready to activate your agent? confirmation dialog in Agentforce Builder" style="max-width:100%;border:1px solid #ddd;border-radius:6px;margin:.5rem 0;" />
