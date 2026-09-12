@@ -42,6 +42,11 @@
     background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25);
     padding: 5px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
   }
+  .ui-switch { display: inline-flex; gap: 3px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 4px; }
+  .hero .ui-switch { margin-bottom: 22px; }
+  .ui-switch .seg { padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: #fff; text-decoration: none; white-space: nowrap; transition: background .15s, color .15s; }
+  .ui-switch a.seg:hover { background: rgba(255,255,255,.18); }
+  .ui-switch .seg.active { background: #fff; color: var(--brand-dark); }
 
   .layout { max-width: 920px; margin: 0 auto; padding: 0 20px 90px; }
 
@@ -94,6 +99,13 @@
     background: linear-gradient(135deg, var(--brand-dark), var(--brand));
     color: #fff; font-size: 20px;
     display: flex; align-items: center; justify-content: center;
+  }
+  h1.section-title .tag-optional { font-size: 12px; letter-spacing: .04em; }
+  .tag-optional {
+    display: inline-block; padding: 3px 10px; border-radius: 999px;
+    background: #eef3fb; color: var(--brand); border: 1px solid var(--border);
+    font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    vertical-align: middle;
   }
   h2 {
     color: var(--brand-dark); font-size: 19px; margin-top: 34px;
@@ -176,6 +188,10 @@
   /* ---------- Per-field copy button ---------- */
   .valwrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .valwrap.valwrap-inline { display: inline-flex; width: auto; gap: 6px; vertical-align: middle; }
+  .callout .eventcode { display: inline-flex; align-items: center; flex-wrap: nowrap; gap: 10px; width: auto; margin-top: 10px; padding: 5px 6px 5px 14px; background: #fff; border: 2px dashed var(--brand); border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .eventcode .label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--brand); white-space: nowrap; }
+  .eventcode .code { font-size: 18px; font-weight: 800; letter-spacing: .1em; color: var(--brand-dark); word-break: normal; white-space: nowrap; }
+  .eventcode .rcopy { font-size: 12px; padding: 5px 11px; }
   .valwrap .v { word-break: break-word; }
   .rcopy { flex: 0 0 auto; background: var(--chip); border: 1px solid var(--border); color: var(--brand); border-radius: 6px; padding: 2px 9px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: background .15s, color .15s; font-family: inherit; }
   .rcopy:hover { background: #e2edf9; }
@@ -217,12 +233,16 @@
 <body>
 
 <header class="hero">
+  <nav class="ui-switch" aria-label="Switch interface">
+    <span class="seg active" aria-current="page">📖 Workshop</span>
+    <a class="seg" href="../index.html">🎮 Playground</a>
+  </nav>
   <h1>How to Launch a Shopper Agent</h1>
   <p>A step-by-step workbook: build, deploy, customize, and ground a B2C Commerce shopper agent — start to finish.</p>
   <div class="hero-badges">
     <span>🛍️ Northern Trail Outfitters</span>
     <span>⚡ Agentforce</span>
-    <span>🧩 4 sections</span>
+    <span>🧩 3 core + 1 optional</span>
   </div>
 </header>
 
@@ -246,7 +266,14 @@
 
     <div class="callout info">
       <span class="ico">ℹ️</span>
-      <p><strong>Prerequisite:</strong> a Salesforce trial org. Grab one from <a href="https://orgfarm.salesforce.com/signup">orgfarm.salesforce.com/signup</a> with Event Code <span class="valwrap valwrap-inline"><code class="v">RLYXNZ7B</code><button class="rcopy">Copy</button></span> (available for one week).</p>
+      <div>
+        <p><strong>Prerequisite:</strong> a Salesforce trial org. Grab one from <a href="https://orgfarm.salesforce.com/signup">orgfarm.salesforce.com/signup</a> using the Event Code below (available for one week).</p>
+        <div class="valwrap eventcode">
+          <span class="label">Event Code</span>
+          <code class="v code">RLYXNZ7B</code>
+          <button class="rcopy">Copy</button>
+        </div>
+      </div>
     </div>
 
     <h2>1.1 Open Commerce Shopper Agent Setup</h2>
@@ -328,23 +355,14 @@
     </figure>
 
     <h2>1.3 Create the agent</h2>
-    <p>Click <strong>Create Agent</strong>. You'll get a <strong>Success</strong> toast — the agent build runs in the background and finishes in about two minutes (you'll get an in-app notification).</p>
+    <p>Click <strong>Create Agent</strong>. You'll get a <strong>Success</strong> toast — the agent build runs in the background and finishes in 2 to 5 mins (you'll get an in-app notification).</p>
     <figure>
       <img src="images/section-1/04-agent-created.png" alt="Commerce Shopper Agent Setup showing a green banner reading Agent creation completed successfully, with the new agent name and its Embedded Service Deployment" />
       <figcaption>When the build finishes, Setup shows &ldquo;Agent creation completed successfully&rdquo; with your agent and its Embedded Service deployment.</figcaption>
     </figure>
 
     <h2>1.4 Get the connection snippet</h2>
-    <p>Setup already created the Embedded Service deployment for you — you don't build one. From <strong>Commerce Shopper Agent Setup</strong>, follow the link to the deployment (or Quick Find <code>embedded</code> &rarr; <strong>Embedded Service Deployments</strong> and open the one named after your agent, e.g. <code>NTO_Shopper_Agent_ES_Custom</code>). On the deployment page, click <strong>Install Code Snippet</strong> &rarr; <strong>Get Code</strong>, then <strong>Copy to Clipboard</strong>. You only need the four connection values (not the full script) for the demo page in Section 2:</p>
-    <div class="code-card">
-      <div class="code-card-head"><span><span class="dot">●</span> connection.json</span><button class="copy-btn">Copy</button></div>
-      <pre>{
-  "channelAddressIdentifier": "866ca16e-f5c9-49f5-b2b5-250c5f4a34ee",
-  "OrganizationId": "00DWt00000KCYnB",
-  "DeveloperName": "NTO_Shopper_Agent_ES_Custom",
-  "Url": "https://storm-b76c200d4b76c7.my.salesforce-scrt.com"
-}</pre>
-    </div>
+    <p>Setup already created the Embedded Service deployment for you — you don't build one. From <strong>Commerce Shopper Agent Setup</strong>, follow the link to the deployment (or Quick Find <code>embedded</code> &rarr; <strong>Embedded Service Deployments</strong> and open the one named after your agent, e.g. <code>NTO_Shopper_Agent_ES_Custom</code>). On the deployment page, click <strong>Install Code Snippet</strong> &rarr; <strong>Get Code</strong>, then <strong>Copy to Clipboard</strong>.</p>
     <div class="callout warn">
       <span class="ico">⚠️</span>
       <p>These values are unique to your org and deployment — <strong>copy your own</strong>; don't reuse the example above.</p>
@@ -465,7 +483,12 @@
 
   <!-- ==================== SECTION 4 ==================== -->
   <section class="step" id="section-4">
-    <h1 class="section-title"><span class="num">4</span> Give the agent knowledge from documents</h1>
+    <h1 class="section-title"><span class="num">4</span> Give the agent knowledge from documents <span class="tag-optional">Optional</span></h1>
+
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p><strong>Optional.</strong> Sections 1&ndash;3 already give you a complete, working Shopper Agent. This section is a bonus: add it if you have time or want richer, document-grounded answers.</p>
+    </div>
 
     <p>The agent script shapes <em>behavior</em>. It carries just enough site knowledge to answer basics like &ldquo;do you accept returns?&rdquo; — but the detail (exact windows, edge cases, the full privacy statement) doesn't belong in a script. That <em>knowledge</em> lives in documents. You load them into an <strong>Agentforce Data Library</strong>, and the packaged <strong>B2C Commerce Site FAQs</strong> action reads the right passage at runtime — grounded, no script change.</p>
 
