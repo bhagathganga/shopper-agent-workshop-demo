@@ -271,39 +271,7 @@
       <figcaption>Success toast: &ldquo;Agent creation process has been started.&rdquo;</figcaption>
     </figure>
 
-    <h2>1.4 Review and activate the agent</h2>
-    <p>Once creation finishes, open <strong>Agentforce Studio &rarr; Agents</strong> (Quick Find <code>agents</code>) and you'll see <strong>NTOShopperAgent</strong> at the top of the list.</p>
-    <figure>
-      <img src="images/section-1/05-agents-list.png" alt="Agentforce Studio Agents list showing NTOShopperAgent created" />
-    </figure>
-    <p>Open it to inspect the generated <strong>agent script</strong> in <strong>Agentforce Builder</strong> — the system instructions, the welcome message, and the subagents (Agent Router, Product Expert, Cart, Order Confirmation, Site FAQ, and the guardrails). This is the same script you'll customize in Section 3.</p>
-    <figure>
-      <img src="images/section-1/06-builder.png" alt="Agentforce Builder showing the NTOShopperAgent agent definition script and the Subagents tree in the Explorer" />
-    </figure>
-    <div class="callout warn">
-      <span class="ico">⚠️</span>
-      <p><strong>Troubleshooting — agent fails while fetching an access token in Builder?</strong> Go to <strong>Setup &rarr; Named Credentials</strong> and find the three generated credentials ending in <code>_ANC</code>, <code>_GNC</code>, and <code>_SFNC</code>. On each, add a <strong>Custom Header</strong> named <code>x-mostly-harmless</code> with value <code>DF26</code> at the next available sequence, then save. If there's no <code>_SFNC</code>, just do <code>_ANC</code> and <code>_GNC</code>.</p>
-    </div>
-    <p>Click <strong>Activate</strong> (top-right) and confirm <em>Ready to activate your agent?</em> &rarr; <strong>Activate</strong>. This makes the version live on the channels it's connected to.</p>
-    <figure>
-      <img src="images/section-1/07-activate.png" alt="Ready to activate your agent? confirmation dialog in Agentforce Builder" />
-    </figure>
-
-    <h2>1.5 Create an Embedded Service deployment</h2>
-    <p>The deployment is the channel that exposes the agent to a web page. In <strong>Setup</strong>, Quick Find <code>embedded</code> &rarr; <strong>Embedded Service Deployments</strong>, click <strong>New Deployment</strong>, and choose <strong>Enhanced Chat</strong>, then <strong>Next</strong>.</p>
-    <figure>
-      <img src="images/section-1/08-new-deployment.png" alt="New Embedded Service deployment wizard with Enhanced Chat selected" />
-    </figure>
-    <p>Finish the wizard to create the deployment (here <strong>NTOShopperAgent_ES</strong>) and make sure it's <strong>Active</strong>.</p>
-    <figure>
-      <img src="images/section-1/09-deployment-active.png" alt="The NTOShopperAgent_ES Custom Client Deployment page marked Active, with Pre-Chat, Push Notifications, and Code Snippet tiles" />
-    </figure>
-    <div class="callout tip">
-      <span class="ico">💡</span>
-      <p>The page carries a banner: <em>&ldquo;After you edit a deployment, publish your changes.&rdquo;</em> A freshly created deployment is already Active — but any time you <strong>edit</strong> it later, click <strong>Publish</strong> to push the change live.</p>
-    </div>
-
-    <h2>1.6 Get the connection snippet</h2>
+    <h2>1.4 Get the connection snippet</h2>
     <p>On the deployment page, click <strong>Install Code Snippet</strong> &rarr; <strong>Get Code</strong>, then <strong>Copy to Clipboard</strong>. You only need the connection values (not the full script) for the demo page in Section 2:</p>
     <div class="code-card">
       <div class="code-card-head"><span><span class="dot">●</span> connection.json</span><button class="copy-btn">Copy</button></div>
@@ -336,7 +304,7 @@
     <p>Navigate to <a href="https://bhagathganga.github.io/shopper-agent-workshop-demo/">bhagathganga.github.io/shopper-agent-workshop-demo</a>. You'll see a config form. (If you don't, click the <strong>Settings</strong> button in the top-right.)</p>
 
     <h2>2.2 Paste your connection JSON</h2>
-    <p>Paste the connection JSON from <strong>Step 1.6</strong> into the config box and give it a <strong>chat header label</strong> (for example, <code>NTO Shopper Agent</code>). No org handy? Click <strong>Load NTO example</strong> to prefill a sample connection.</p>
+    <p>Paste the connection JSON from <strong>Step 1.4</strong> into the config box and click <strong>Fill fields from JSON</strong> — the SCRT2 URL, Organization ID, and ES Developer Name fill in automatically. Give it a <strong>chat header label</strong> (for example, <code>NTO Shopper Agent</code>).</p>
     <div class="code-card">
       <div class="code-card-head"><span><span class="dot">●</span> connection.json</span><button class="copy-btn">Copy</button></div>
       <pre>{
