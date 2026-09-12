@@ -439,14 +439,28 @@
     <p>Personalize the agent script. Change one thing at a time and re-test in your demo app to see the effect.</p>
 
     <h2>3.1 Welcome message</h2>
-    <p>The first line the agent says. Find <code>welcome</code> (under <code>system &rarr; messages</code>) and swap in your own name:</p>
+    <p>The first line the agent says. In <strong>Agentforce Builder</strong>, open <strong>Settings &rarr; System Messages</strong> from the Explorer, and find <code>welcome</code> (under <code>system &rarr; messages</code>).</p>
+    <figure>
+      <img src="images/section-3/31-welcome-in-builder.png" alt="Agentforce Builder with Settings → System Messages open in the Explorer and the welcome message highlighted under system → messages" />
+      <figcaption>Settings &rarr; System Messages — the <code>welcome</code> line is under <code>system &rarr; messages</code>.</figcaption>
+    </figure>
+    <p>Swap in your own name:</p>
     <div class="code-card">
       <div class="code-card-head"><span><span class="dot">●</span> welcome</span><button class="copy-btn">Copy</button></div>
       <pre>Hi, I'm Ava — your personal shopping assistant. What are you looking for today?</pre>
     </div>
+    <p>Save, then re-test in your demo app — the agent opens with your new greeting.</p>
+    <figure>
+      <img src="images/section-3/31-welcome-result.png" alt="The demo playground showing the agent's new welcome message: Hi, I'm Ava — your personal shopping assistant. What are you looking for today?" />
+      <figcaption>Your edited welcome message, live in the demo app.</figcaption>
+    </figure>
 
     <h2>3.2 Retailer voice</h2>
-    <p>Describe how your agent should sound. This shapes every reply. Find <code>retailer_voice</code> and write your own, for example:</p>
+    <p>Describe how your agent should sound. This shapes every reply. Open <strong>Variables</strong> in the Explorer and find <code>retailer_voice</code> (it ships as <code>"Friendly"</code>) — write your own, for example:</p>
+    <figure>
+      <img src="images/section-3/32-retailer-voice.png" alt="Agentforce Builder Variables view with retailer_voice found and its default value Friendly highlighted" />
+      <figcaption>Variables &rarr; <code>retailer_voice</code> — search the Variables file to jump straight to it.</figcaption>
+    </figure>
     <div class="code-card">
       <div class="code-card-head"><span><span class="dot">●</span> retailer_voice</span><button class="copy-btn">Copy</button></div>
       <pre>Warm, upbeat concierge. Short, friendly replies. Plain language, at most one emoji, never pushy.</pre>
