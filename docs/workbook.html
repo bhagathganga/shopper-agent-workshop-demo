@@ -277,7 +277,11 @@
     </div>
 
     <h2>1.1 Open Commerce Shopper Agent Setup</h2>
-    <p>In <strong>Setup</strong>, use <strong>Quick Find</strong> to search <code>commerce</code>, then open <strong>Commerce Shopper Agent Setup</strong> (under Feature Settings &rarr; Commerce).</p>
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p><strong>First login?</strong> Dismiss the <strong>&ldquo;Canvas - Q_Passport&rdquo;</strong> error that appears when you initially log in — it's harmless and won't affect the workshop.</p>
+    </div>
+    <p>Using the <strong>Setup gear icon</strong> in the top-right navigation area, click <strong>Setup</strong> in the drop-down menu. When the Setup window appears, use the <strong>Quick Find</strong> box (left navigation area) to search for <code>Commerce Shopper Agent Setup</code>, then open it (under Feature Settings &rarr; Commerce).</p>
     <figure>
       <img src="images/section-1/01-nav-setup.png" alt="Setup Quick Find showing commerce, with Commerce Shopper Agent Setup highlighted in the tree" />
       <figcaption>Setup &rarr; Quick Find &ldquo;commerce&rdquo; &rarr; Commerce Shopper Agent Setup.</figcaption>
@@ -349,6 +353,11 @@
       </div>
     </div>
 
+    <div class="callout tip">
+      <span class="ico">💡</span>
+      <p>The <strong>SLAS Client Secret</strong> is masked (both here and in the Setup form). Click <strong>Show</strong> before <strong>Copy</strong> — otherwise you'll copy a string of asterisks and the agent won't connect.</p>
+    </div>
+
     <figure>
       <img src="images/section-1/03-form-filled.png" alt="The setup form filled with NTO values and the Create Agent button" />
       <figcaption>The setup form filled with the NTO values above.</figcaption>
@@ -362,7 +371,7 @@
     </figure>
 
     <h2>1.4 Get the connection snippet</h2>
-    <p>Setup already created the Embedded Service deployment for you — you don't build one. From <strong>Commerce Shopper Agent Setup</strong>, follow the link to the deployment (or Quick Find <code>embedded</code> &rarr; <strong>Embedded Service Deployments</strong> and open the one named after your agent, e.g. <code>NTO_Shopper_Agent_ES_Custom</code>). On the deployment page, click <strong>Install Code Snippet</strong> &rarr; <strong>Get Code</strong>, then <strong>Copy to Clipboard</strong>.</p>
+    <p>Setup already created the Embedded Service deployment for you — you don't build one. In the Shopper Agent Setup UI, click the <strong>Embedded Service Deployment</strong> link that appears <em>just below</em> the green-shaded <strong>&ldquo;Agent creation completed successfully&rdquo;</strong> message. (It's easy to miss — look directly under the green banner.) If you've navigated away, you can also reach it via Quick Find <code>embedded</code> &rarr; <strong>Embedded Service Deployments</strong>, opening the one named after your agent, e.g. <code>NTO_Shopper_Agent_ES_Custom</code>. On the deployment page, click <strong>Install Code Snippet</strong> &rarr; <strong>Get Code</strong>, then <strong>Copy to Clipboard</strong>.</p>
     <div class="callout warn">
       <span class="ico">⚠️</span>
       <p>These values are unique to your org and deployment — <strong>copy your own</strong>; don't reuse the example above.</p>
@@ -382,7 +391,11 @@
     <p>You don't need a storefront to try the agent. This demo playground is a single static page that loads the Cimulate chat widget and connects to your agent using the connection JSON you copied in Section 1. Paste, connect, and chat.</p>
 
     <h2>2.1 Open the demo playground</h2>
-    <p>Navigate to <a href="https://bhagathganga.github.io/shopper-agent-workshop-demo/">bhagathganga.github.io/shopper-agent-workshop-demo</a>. You'll see a config form. (If you don't, click the <strong>Settings</strong> button in the top-right.)</p>
+    <p>Open <a href="https://bhagathganga.github.io/shopper-agent-workshop-demo/" target="_blank" rel="noopener">bhagathganga.github.io/shopper-agent-workshop-demo</a> <strong>in a new tab</strong> (right-click &rarr; <em>Open in new tab</em>) so you can keep this guide open alongside it. You'll see a config form. (If you don't, click the <strong>Settings</strong> button in the top-right.)</p>
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p>At the top of the page there's a <strong>Workshop / Playground</strong> toggle. <strong>Workshop</strong> is this step-by-step guide; <strong>Playground</strong> is the live demo page where you paste your connection JSON and chat with your agent. For this step, switch to <strong>Playground</strong>.</p>
+    </div>
 
     <h2>2.2 Paste your connection JSON</h2>
     <p>Paste the connection JSON from <strong>Step 1.4</strong> into the config box and click <strong>Fill fields from JSON</strong> — the SCRT2 URL, Organization ID, and ES Developer Name fill in automatically. Give it a <strong>chat header label</strong> (for example, <code>NTO Shopper Agent</code>).</p>
@@ -443,6 +456,17 @@
     <h2>3.3 Add a shoe finder</h2>
     <p>Let's customize the agent to add a <strong>shoe finder</strong>: when a shopper wants footwear, the agent asks for their gender and size, shows the sizes as tappable pills, then searches only in that size — and if that turns up little, it broadens to similar products while staying in that size, never substituting another. This takes two edits — one to guide the search, one to build the pills.</p>
 
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <div>
+        <p><strong>Two terms used below:</strong></p>
+        <ul style="margin:.5rem 0 0; padding-left:1.2rem;">
+          <li style="margin-bottom:.4rem;"><strong>Pill</strong> — a small, rounded, tappable button (a &ldquo;chip&rdquo;) the agent shows under its message as a quick reply, so the shopper taps it instead of typing. The <span class="pill script">Script</span> / <span class="pill doc">Document</span> badges in Section 4 are the same rounded shape. You'll see real pills when you test at the end of this step (and on the welcome screen from Step 2.3).</li>
+          <li><strong>Ladder</strong> — the full, ordered list of sizes for one group (e.g. the women's ladder runs 5 → 11). &ldquo;Rendering the ladder&rdquo; means turning every rung into its own pill so the shopper taps their size rather than typing it.</li>
+        </ul>
+      </div>
+    </div>
+
     <div class="callout warn">
       <span class="ico">⚠️</span>
       <p>Keep each rule string under <strong>255 characters</strong>. Agent Builder rejects the commit if any single variable value string exceeds that limit — and <code>sf agent validate</code> won't catch it.</p>
@@ -460,6 +484,10 @@
     <figure>
       <img src="images/section-3/shoe-01-tool-calling.png" alt="Agent Builder Variables view showing the tool_calling_guidance list with the SHOE PREREQUISITE, SIZE SEARCHING, and SAME-SIZE SEARCH rules" />
     </figure>
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p><strong>Why <code>c_size</code>?</strong> In B2C Commerce, the <code>c_</code> prefix marks a <strong>custom attribute</strong> — one the retailer defined on their catalog, as opposed to a Salesforce standard field. NTO stores shoe size in a custom attribute named <code>size</code>, so at the API it's <code>c_size</code>. The name must match the attribute's ID in <em>your</em> catalog <strong>exactly</strong> — on another storefront it might be <code>c_shoeSize</code> or similar, so check your catalog's attribute definitions before reusing this rule. (Standard attributes like <code>price</code> or <code>brand</code> have no <code>c_</code> prefix.)</p>
+    </div>
 
     <h3>b) Build the size pills — <code>response_guidance</code></h3>
     <p>Add these rules to the <code>response_guidance</code> list. Each size in a ladder becomes one tappable pill. (Sizes verified available in the NTO catalog.)</p>
