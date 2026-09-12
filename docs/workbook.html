@@ -548,15 +548,16 @@
     <p>Add these rules to the <code>response_guidance</code> list. Each size in a ladder becomes one tappable pill. (Sizes verified available in the NTO catalog.)</p>
     <div class="code-card">
       <div class="code-card-head"><span><span class="dot">●</span> response_guidance</span><button class="copy-btn">Copy</button></div>
-      <pre>"SHOPPER'S VOICE: Phrase every pill in the shopper's own words (e.g. 'Show me black ones', 'Under $150').",
+      <pre>"SHOPPER'S VOICE: Phrase every pill in the shopper's own words (e.g. 'Show me black ones', 'Under $150'). Never phrase a pill as an instruction ('Type your size', 'Select a color').",
+        "CLARIFYING TURNS: If a required piece is unknown, ask ONE clarifying question and offer a suggestions block of ONLY answer pills for that question. Show no product carousel and no unrelated pills on this turn.",
         "GENDER PILLS: When asking who the shoes are for, output ONLY these three pills: Men's, Women's, Kids.",
-        "SIZE LADDER: When asking for shoe size, output EVERY size in the matching ladder below as its own pill, in order — never skip or sample. Use WOMENS, MENS, or KIDS, then end with the different-size pill (see below).",
-        "DIFFERENT-SIZE PILL (MANDATORY): Every size question MUST end with the different-size pill — never drop it, even if you shorten the list.",
+        "SIZE LADDER PILLS: When asking for shoe size, you MUST output the exact array of pills specified below for the demographic. Do not skip, sample, or generate your own ranges.",
+        "DIFFERENT-SIZE PILL (MANDATORY): The final pill MUST ALWAYS be the different-size phrase, on EVERY size-question turn, no exceptions. Even if you shorten the size list, this pill is required and must never be dropped.",
         "DIFFERENT-SIZE PILL (SUBJECT): Match who they're shopping for. For themselves: 'I wear a different size'. For someone else: 'He wears a different size' / 'She wears a different size' / 'They wear a different size'.",
-        "DIFFERENT-SIZE PILL (PHRASING): Keep it in the shopper's voice — never an instruction like 'Type a different size' or 'Enter your size'.",
-        "WOMENS LADDER: Size 5, Size 5.5, Size 6, Size 6.5, Size 7, Size 7.5, Size 8, Size 8.5, Size 9, Size 9.5, Size 10, Size 10.5, Size 11",
-        "MENS LADDER: Size 7, Size 7.5, Size 8, Size 8.5, Size 9, Size 9.5, Size 10, Size 10.5, Size 11, Size 11.5, Size 12, Size 12.5, Size 13",
-        "KIDS LADDER: Size 1, Size 1.5, Size 2, Size 2.5, Size 3, Size 3.5, Size 4, Size 4.5, Size 5, Size 5.5, Size 6, Size 7, Size 8, Size 9, Size 10, Size 11, Size 12, Size 13"</pre>
+        "DIFFERENT-SIZE PILL (PHRASING): Do NOT phrase it as an instruction like 'Type a different size'. Keep it in the shopper's voice for whoever they're buying for.",
+        "WOMENS LADDER: Output EXACTLY: Size 5, Size 5.5, Size 6, Size 6.5, Size 7, Size 7.5, Size 8, Size 8.5, Size 9, Size 9.5, Size 10, Size 10.5, Size 11, then the different-size pill (see SUBJECT rule).",
+        "MENS LADDER: Output EXACTLY: Size 7, Size 7.5, Size 8, Size 8.5, Size 9, Size 9.5, Size 10, Size 10.5, Size 11, Size 11.5, Size 12, Size 12.5, Size 13, then the different-size pill (see SUBJECT rule).",
+        "KIDS LADDER: Output EXACTLY: Size 1, Size 1.5, Size 2, Size 2.5, Size 3, Size 3.5, Size 4, Size 4.5, Size 5, Size 5.5, Size 6, Size 7, Size 8, Size 9, Size 10, Size 11, Size 12, Size 13, then the different-size pill (see SUBJECT rule)."</pre>
     </div>
     <figure>
       <img src="images/section-3/shoe-02-response-guidance.png" alt="Agent Builder Variables view showing the response_guidance list with the SHOPPER'S VOICE, GENDER PILLS, SIZE LADDER, and WOMENS/MENS/KIDS LADDER rules, and the 255-character warning comment" />
