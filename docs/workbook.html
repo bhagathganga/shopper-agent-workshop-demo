@@ -516,7 +516,7 @@
       <div>
         <p><strong>Two terms used below:</strong></p>
         <ul style="margin:.5rem 0 0; padding-left:1.2rem;">
-          <li style="margin-bottom:.4rem;"><strong>Pill</strong> — a small, rounded, tappable button (a &ldquo;chip&rdquo;) the agent shows under its message as a quick reply, so the shopper taps it instead of typing. The <span class="pill script">Script</span> / <span class="pill doc">Document</span> badges in Section 4 are the same rounded shape. You'll see real pills when you test at the end of this step (and on the welcome screen from Step 2.3).</li>
+          <li style="margin-bottom:.4rem;"><strong>Pill</strong> — a small, rounded, tappable button (a &ldquo;chip&rdquo;) the agent shows under its message as a quick reply, so the shopper taps it instead of typing. You'll see real pills when you test at the end of this step (and on the welcome screen from Step 2.3).</li>
           <li><strong>Ladder</strong> — the full, ordered list of sizes for one group (e.g. the women's ladder runs 5 → 11). &ldquo;Rendering the ladder&rdquo; means turning every rung into its own pill so the shopper taps their size rather than typing it.</li>
         </ul>
       </div>
@@ -580,18 +580,16 @@
       <p><strong>Optional.</strong> Sections 1&ndash;3 already give you a complete, working Shopper Agent. This section is a bonus: add it if you have time or want richer, document-grounded answers.</p>
     </div>
 
-    <p>The agent script shapes <em>behavior</em>. It carries just enough site knowledge to answer basics like &ldquo;do you accept returns?&rdquo; — but the detail (exact windows, edge cases, the full privacy statement) doesn't belong in a script. That <em>knowledge</em> lives in documents. You load them into an <strong>Agentforce Data Library</strong>, and the packaged <strong>B2C Commerce Site FAQs</strong> action reads the right passage at runtime — grounded, no script change.</p>
+    <p>The agent script shapes <em>behavior</em>, but it ships with an <strong>empty</strong> Site FAQ — a placeholder subagent with no content loaded. So policy questions like &ldquo;do you accept returns?&rdquo; don't work yet: the agent just says it couldn't find that information. That <em>knowledge</em> lives in documents. You load them into an <strong>Agentforce Data Library</strong>, wire up the packaged <strong>B2C Commerce Site FAQs</strong> action, and it reads the right passage at runtime — grounded, no script change.</p>
 
-    <p>The difference is basic vs. detailed:</p>
+    <p>Here's the difference this section makes:</p>
     <table class="data">
       <thead>
-        <tr><th>Shopper asks</th><th>Answer</th><th>Comes from</th></tr>
+        <tr><th>Shopper asks</th><th>Before (empty Site FAQ)</th><th>After (Data Library)</th></tr>
       </thead>
       <tbody>
-        <tr><td class="q">&ldquo;Do you accept returns?&rdquo;</td><td>Yes</td><td><span class="pill script">Script</span></td></tr>
-        <tr><td class="q">&ldquo;How long, and does it need original packaging?&rdquo;</td><td>28 days, unworn, with the Returns Form</td><td><span class="pill doc">Document</span></td></tr>
-        <tr><td class="q">&ldquo;Do you ship orders?&rdquo;</td><td>Yes</td><td><span class="pill script">Script</span></td></tr>
-        <tr><td class="q">&ldquo;Which carrier, and how fast?&rdquo;</td><td>UPS Standard, dispatched within 2 working days</td><td><span class="pill doc">Document</span></td></tr>
+        <tr><td class="q">&ldquo;Do you accept returns?&rdquo;</td><td>&ldquo;I couldn't find information about that&rdquo;</td><td>Yes — 28 days, unworn, with the Returns Form</td></tr>
+        <tr><td class="q">&ldquo;Which carrier, and how fast?&rdquo;</td><td>&ldquo;I couldn't find information about that&rdquo;</td><td>UPS Standard, dispatched within 2 working days</td></tr>
       </tbody>
     </table>
 
