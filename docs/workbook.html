@@ -580,7 +580,9 @@
       <p><strong>Optional.</strong> Sections 1&ndash;3 already give you a complete, working Shopper Agent. This section is a bonus: add it if you have time or want richer, document-grounded answers.</p>
     </div>
 
-    <p>The agent script shapes <em>behavior</em>, but it ships with an <strong>empty</strong> Site FAQ — a placeholder subagent with no content loaded. So policy questions like &ldquo;do you accept returns?&rdquo; don't work yet: the agent just says it couldn't find that information. That <em>knowledge</em> lives in documents. You load them into an <strong>Agentforce Data Library</strong>, wire up the packaged <strong>B2C Commerce Site FAQs</strong> action, and it reads the right passage at runtime — grounded, no script change.</p>
+    <p>The agent script shapes <em>behavior</em>, but it ships with an <strong>empty</strong> Site FAQ — a placeholder subagent with no content loaded. So policy questions like &ldquo;do you accept returns?&rdquo; don't work yet: the agent just says it couldn't find that information.</p>
+
+    <p>You have two ways to fix that. You <em>could</em> add your own instructions to this placeholder subagent — enough to route the shopper to a support page or answer a few basics inline. But that hard-codes knowledge into the script and doesn't scale as your policies change. The ideal approach — and what this section does — is to <strong>delete this placeholder</strong> and add the packaged <strong>B2C Commerce Site FAQs</strong> action instead, which grounds answers in documents you load into an <strong>Agentforce Data Library</strong>. It reads the right passage at runtime — no script change needed when a policy is updated.</p>
 
     <p>Here's the difference this section makes:</p>
     <table class="data">
