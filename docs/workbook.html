@@ -100,6 +100,14 @@
     color: #fff; font-size: 20px;
     display: flex; align-items: center; justify-content: center;
   }
+  h1.section-title .tag-optional { font-size: 12px; letter-spacing: .04em; }
+  .tag-optional {
+    display: inline-block; padding: 3px 10px; border-radius: 999px;
+    background: #eef3fb; color: var(--brand); border: 1px solid var(--border);
+    font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    vertical-align: middle;
+  }
+  .toc li .tag-optional { margin-left: 6px; padding: 1px 7px; font-size: 9.5px; }
   h2 {
     color: var(--brand-dark); font-size: 19px; margin-top: 34px;
     padding-left: 12px; border-left: 4px solid var(--brand);
@@ -235,7 +243,7 @@
   <div class="hero-badges">
     <span>🛍️ Northern Trail Outfitters</span>
     <span>⚡ Agentforce</span>
-    <span>🧩 4 sections</span>
+    <span>🧩 3 core + 1 optional</span>
   </div>
 </header>
 
@@ -247,7 +255,7 @@
       <li><a href="#section-1">Build a Shopper Agent with Shopper Agent Setup</a></li>
       <li><a href="#section-2">Configure &amp; test the agent on a standalone page</a></li>
       <li><a href="#section-3">Make the agent your own (customize the script)</a></li>
-      <li><a href="#section-4">Give the agent knowledge from documents</a></li>
+      <li><a href="#section-4">Give the agent knowledge from documents</a><span class="tag-optional">Optional</span></li>
     </ol>
   </nav>
 
@@ -483,7 +491,12 @@
 
   <!-- ==================== SECTION 4 ==================== -->
   <section class="step" id="section-4">
-    <h1 class="section-title"><span class="num">4</span> Give the agent knowledge from documents</h1>
+    <h1 class="section-title"><span class="num">4</span> Give the agent knowledge from documents <span class="tag-optional">Optional</span></h1>
+
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p><strong>Optional.</strong> Sections 1&ndash;3 already give you a complete, working Shopper Agent. This section is a bonus: add it if you have time or want richer, document-grounded answers.</p>
+    </div>
 
     <p>The agent script shapes <em>behavior</em>. It carries just enough site knowledge to answer basics like &ldquo;do you accept returns?&rdquo; — but the detail (exact windows, edge cases, the full privacy statement) doesn't belong in a script. That <em>knowledge</em> lives in documents. You load them into an <strong>Agentforce Data Library</strong>, and the packaged <strong>B2C Commerce Site FAQs</strong> action reads the right passage at runtime — grounded, no script change.</p>
 
