@@ -107,7 +107,6 @@
     font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
     vertical-align: middle;
   }
-  .toc li .tag-optional { margin-left: 6px; padding: 1px 7px; font-size: 9.5px; }
   h2 {
     color: var(--brand-dark); font-size: 19px; margin-top: 34px;
     padding-left: 12px; border-left: 4px solid var(--brand);
@@ -189,10 +188,10 @@
   /* ---------- Per-field copy button ---------- */
   .valwrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .valwrap.valwrap-inline { display: inline-flex; width: auto; gap: 6px; vertical-align: middle; }
-  .callout .eventcode { display: inline-flex; align-items: center; gap: 14px; width: auto; margin-top: 12px; padding: 8px 8px 8px 18px; background: #fff; border: 2px dashed var(--brand); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
-  .eventcode .label { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--brand); }
-  .eventcode .code { font-size: 24px; font-weight: 800; letter-spacing: .16em; color: var(--brand-dark); word-break: normal; }
-  .eventcode .rcopy { font-size: 12.5px; padding: 6px 13px; }
+  .callout .eventcode { display: inline-flex; align-items: center; flex-wrap: nowrap; gap: 10px; width: auto; margin-top: 10px; padding: 5px 6px 5px 14px; background: #fff; border: 2px dashed var(--brand); border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .eventcode .label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--brand); white-space: nowrap; }
+  .eventcode .code { font-size: 18px; font-weight: 800; letter-spacing: .1em; color: var(--brand-dark); word-break: normal; white-space: nowrap; }
+  .eventcode .rcopy { font-size: 12px; padding: 5px 11px; }
   .valwrap .v { word-break: break-word; }
   .rcopy { flex: 0 0 auto; background: var(--chip); border: 1px solid var(--border); color: var(--brand); border-radius: 6px; padding: 2px 9px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: background .15s, color .15s; font-family: inherit; }
   .rcopy:hover { background: #e2edf9; }
@@ -255,7 +254,7 @@
       <li><a href="#section-1">Build a Shopper Agent with Shopper Agent Setup</a></li>
       <li><a href="#section-2">Configure &amp; test the agent on a standalone page</a></li>
       <li><a href="#section-3">Make the agent your own (customize the script)</a></li>
-      <li><a href="#section-4">Give the agent knowledge from documents</a><span class="tag-optional">Optional</span></li>
+      <li><a href="#section-4">Give the agent knowledge from documents</a></li>
     </ol>
   </nav>
 
@@ -267,11 +266,13 @@
 
     <div class="callout info">
       <span class="ico">ℹ️</span>
-      <p><strong>Prerequisite:</strong> a Salesforce trial org. Grab one from <a href="https://orgfarm.salesforce.com/signup">orgfarm.salesforce.com/signup</a> using the Event Code below (available for one week).</p>
-      <div class="valwrap eventcode">
-        <span class="label">Event Code</span>
-        <code class="v code">RLYXNZ7B</code>
-        <button class="rcopy">Copy</button>
+      <div>
+        <p><strong>Prerequisite:</strong> a Salesforce trial org. Grab one from <a href="https://orgfarm.salesforce.com/signup">orgfarm.salesforce.com/signup</a> using the Event Code below (available for one week).</p>
+        <div class="valwrap eventcode">
+          <span class="label">Event Code</span>
+          <code class="v code">RLYXNZ7B</code>
+          <button class="rcopy">Copy</button>
+        </div>
       </div>
     </div>
 
