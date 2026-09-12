@@ -162,6 +162,24 @@
   .copy-btn:hover { background: rgba(255,255,255,.22); }
   .copy-btn.copied { background: #1b7a44; color: #fff; border-color: #1b7a44; }
 
+  /* ---------- Org tabs (form values) ---------- */
+  .org-selector { margin: 16px 0; }
+  .org-tabs { display: flex; gap: 6px; }
+  .org-tab { padding: 9px 18px; border: 1px solid var(--border); border-bottom: none; border-radius: 10px 10px 0 0; background: var(--chip); color: var(--brand-dark); font-weight: 600; font-size: 14px; cursor: pointer; transition: background .15s, color .15s; }
+  .org-tab:hover { background: #e2edf9; }
+  .org-tab.active { background: var(--brand-dark); color: #fff; border-color: var(--brand-dark); }
+  .org-tab .sub { font-weight: 500; opacity: .75; font-size: 12px; }
+  .org-panel { border: 1px solid var(--border); border-radius: 0 10px 10px 10px; padding: 4px 16px 16px; }
+  .org-panel.hidden { display: none; }
+  .org-panel table.kv { margin-top: 14px; }
+
+  /* ---------- Per-field copy button ---------- */
+  .valwrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .valwrap .v { word-break: break-word; }
+  .rcopy { flex: 0 0 auto; background: var(--chip); border: 1px solid var(--border); color: var(--brand); border-radius: 6px; padding: 2px 9px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: background .15s, color .15s; font-family: inherit; }
+  .rcopy:hover { background: #e2edf9; }
+  .rcopy.copied { background: #1b7a44; color: #fff; border-color: #1b7a44; }
+
   /* ---------- Steps list ---------- */
   ol.steps { counter-reset: st; list-style: none; padding: 0; margin: 16px 0; }
   ol.steps > li {
@@ -224,7 +242,7 @@
 
     <div class="callout info">
       <span class="ico">ℹ️</span>
-      <p><strong>Prerequisite:</strong> a Salesforce trial org. Grab one from <a href="https://orgfarm.salesforce.com/signup">orgfarm.salesforce.com/signup</a> with Event Code <strong>JD582MF2</strong> (available for one week).</p>
+      <p><strong>Prerequisite:</strong> a Salesforce trial org. Grab one from <a href="https://orgfarm.salesforce.com/signup">orgfarm.salesforce.com/signup</a> with Event Code <strong>RLYXNZ7B</strong> (available for one week).</p>
     </div>
 
     <h2>1.1 Open Commerce Shopper Agent Setup</h2>
@@ -235,29 +253,71 @@
     </figure>
 
     <h2>1.2 Fill in the agent details</h2>
-    <p>The form opens with placeholder examples. Northern Trail Outfitters is a demo storefront that sells outdoor apparel — use these instance details:</p>
-    <table class="kv">
-      <tr class="group"><th colspan="2">Agent Details</th></tr>
-      <tr><td class="field">Agent Type</td><td class="val">Agent Script (Enhanced Search)</td></tr>
-      <tr><td class="field">Agent User</td><td class="val">Create a new user</td></tr>
-      <tr><td class="field">Agent Name</td><td class="val">NTOShopperAgent</td></tr>
-      <tr><td class="field">Company</td><td class="val">Northern Trail Outfitters</td></tr>
-      <tr class="group"><th colspan="2">Salesforce Commerce Cloud (B2C)</th></tr>
-      <tr><td class="field">Storefront Type</td><td class="val">SFRA</td></tr>
-      <tr><td class="field">B2C Org ID</td><td class="val">f_ecom_tbhc_prd</td></tr>
-      <tr><td class="field">Site ID</td><td class="val">nto</td></tr>
-      <tr><td class="field">Storefront URL</td><td class="val">https://www.shop.prd.tbhc.sfcc-store-internal.net/on/demandware.store/Sites-nto-Site</td></tr>
-      <tr><td class="field">Locale</td><td class="val">en-US</td></tr>
-      <tr><td class="field">CDN Hostname</td><td class="val">https://s3.amazonaws.com</td></tr>
-      <tr class="group"><th colspan="2">SLAS (Shopper Login &amp; API Access)</th></tr>
-      <tr><td class="field">Commerce API URL</td><td class="val">https://sandbox-001.api.commercecloud.salesforce.com</td></tr>
-      <tr><td class="field">SLAS Client ID</td><td class="val">a581cb19-12e9-4620-bb77-8551b51ad56e</td></tr>
-      <tr><td class="field">SLAS Client Secret</td><td class="val">7R4OlmAFtpujGOZ0Ur36K3wMpoN9YVFbGSCHf_Wrba8</td></tr>
-    </table>
-    <div class="callout warn">
-      <span class="ico">⚠️</span>
-      <p>The <strong>SLAS Client Secret</strong> above is for this event only and will be rotated afterward.</p>
+    <p>The form opens with placeholder examples. Northern Trail Outfitters is a demo storefront that sells outdoor apparel — use these instance details. Pick your org below and use the <strong>Copy</strong> button on each field to paste it straight into the Setup form.</p>
+
+    <div class="org-selector">
+      <div class="org-tabs" role="tablist">
+        <button class="org-tab active" data-org="zzsa" role="tab">zzsa14 <span class="sub">(default)</span></button>
+        <button class="org-tab" data-org="tbhc" role="tab">TBHC</button>
+      </div>
+
+      <!-- zzsa14 (default) -->
+      <div class="org-panel" data-org="zzsa">
+        <table class="kv">
+          <tr class="group"><th colspan="2">Agent Details</th></tr>
+          <tr><td class="field">Agent Type</td><td class="val"><div class="valwrap"><span class="v">Agent Script (Enhanced Search)</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Agent User</td><td class="val"><div class="valwrap"><span class="v">Create a new user</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Agent Name</td><td class="val"><div class="valwrap"><span class="v">NTO Shopper Agent</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Company</td><td class="val"><div class="valwrap"><span class="v">Northern Trail Outfitters</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr class="group"><th colspan="2">Salesforce Commerce Cloud (B2C)</th></tr>
+          <tr><td class="field">Storefront Type</td><td class="val"><div class="valwrap"><span class="v">SFRA</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">B2C Org ID</td><td class="val"><div class="valwrap"><span class="v">f_ecom_zzsa_014</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Site ID</td><td class="val"><div class="valwrap"><span class="v">nto</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Storefront URL</td><td class="val"><div class="valwrap"><span class="v">https://zzsa-014.my.commercecloud.salesforce.com/s/nto/en_US/home</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Locale</td><td class="val"><div class="valwrap"><span class="v">en-US</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">CDN Hostname</td><td class="val"><div class="valwrap"><span class="v">https://s3.amazonaws.com</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr class="group"><th colspan="2">SLAS (Shopper Login &amp; API Access)</th></tr>
+          <tr><td class="field">Commerce API URL</td><td class="val"><div class="valwrap"><span class="v">https://kv7kzm78.api.commercecloud.salesforce.com</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">SLAS Client ID</td><td class="val"><div class="valwrap"><span class="v">80c58f7c-9b04-4b2b-9959-835ab279ed4c</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">SLAS Client Secret</td><td class="val"><div class="valwrap"><span class="v">dDCKHl-B3DxdmPvlmDrJYi027mc1OFmcYL_JpkjS1gI</span><button class="rcopy">Copy</button></div></td></tr>
+        </table>
+        <div class="callout warn">
+          <span class="ico">⚠️</span>
+          <p>The <strong>SLAS Client Secret</strong> above is for this event only and will be rotated afterward.</p>
+        </div>
+      </div>
+
+      <!-- TBHC (optional) -->
+      <div class="org-panel hidden" data-org="tbhc">
+        <table class="kv">
+          <tr class="group"><th colspan="2">Agent Details</th></tr>
+          <tr><td class="field">Agent Type</td><td class="val"><div class="valwrap"><span class="v">Agent Script (Enhanced Search)</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Agent User</td><td class="val"><div class="valwrap"><span class="v">Create a new user</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Agent Name</td><td class="val"><div class="valwrap"><span class="v">NTOShopperAgent</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Company</td><td class="val"><div class="valwrap"><span class="v">Northern Trail Outfitters</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr class="group"><th colspan="2">Salesforce Commerce Cloud (B2C)</th></tr>
+          <tr><td class="field">Storefront Type</td><td class="val"><div class="valwrap"><span class="v">SFRA</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">B2C Org ID</td><td class="val"><div class="valwrap"><span class="v">f_ecom_tbhc_prd</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Site ID</td><td class="val"><div class="valwrap"><span class="v">nto</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Storefront URL</td><td class="val"><div class="valwrap"><span class="v">https://www.shop.prd.tbhc.sfcc-store-internal.net/on/demandware.store/Sites-nto-Site</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Locale</td><td class="val"><div class="valwrap"><span class="v">en-US</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">CDN Hostname</td><td class="val"><div class="valwrap"><span class="v">https://s3.amazonaws.com</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr class="group"><th colspan="2">SLAS (Shopper Login &amp; API Access)</th></tr>
+          <tr><td class="field">Commerce API URL</td><td class="val"><div class="valwrap"><span class="v">https://sandbox-001.api.commercecloud.salesforce.com</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">SLAS Client ID</td><td class="val"><div class="valwrap"><span class="v">a581cb19-12e9-4620-bb77-8551b51ad56e</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">SLAS Client Secret</td><td class="val"><div class="valwrap"><span class="v">7R4OlmAFtpujGOZ0Ur36K3wMpoN9YVFbGSCHf_Wrba8</span><button class="rcopy">Copy</button></div></td></tr>
+        </table>
+        <div class="callout warn">
+          <span class="ico">⚠️</span>
+          <p>The <strong>SLAS Client Secret</strong> above is for this event only and will be rotated afterward.</p>
+        </div>
+        <div class="callout warn">
+          <span class="ico">⚠️</span>
+          <p><strong>Troubleshooting (TBHC) — agent fails while fetching an access token in Builder?</strong> Go to <strong>Setup &rarr; Named Credentials</strong> and find the three generated credentials ending in <code>_ANC</code>, <code>_GNC</code>, and <code>_SFNC</code>. On each, add a <strong>Custom Header</strong> named <code>x-mostly-harmless</code> with value <code>DF26</code> at the next available sequence, then save. If there's no <code>_SFNC</code>, just do <code>_ANC</code> and <code>_GNC</code>.</p>
+        </div>
+      </div>
     </div>
+
     <figure>
       <img src="images/section-1/02-form-empty.png" alt="The empty Commerce Shopper Agent Setup form with placeholder examples for Storefront Type, B2C Org ID, Site ID, Storefront URL, and SLAS configuration" />
       <img src="images/section-1/03-form-filled.png" alt="The setup form filled with NTO values and the Create Agent button" />
@@ -272,14 +332,14 @@
     </figure>
 
     <h2>1.4 Get the connection snippet</h2>
-    <p>On the deployment page, click <strong>Install Code Snippet</strong> &rarr; <strong>Get Code</strong>, then <strong>Copy to Clipboard</strong>. You only need the connection values (not the full script) for the demo page in Section 2:</p>
+    <p>Setup already created the Embedded Service deployment for you — you don't build one. From <strong>Commerce Shopper Agent Setup</strong>, follow the link to the deployment (or Quick Find <code>embedded</code> &rarr; <strong>Embedded Service Deployments</strong> and open the one named after your agent, e.g. <code>NTO_Shopper_Agent_ES_Custom</code>). On the deployment page, click <strong>Install Code Snippet</strong> &rarr; <strong>Get Code</strong>, then <strong>Copy to Clipboard</strong>. You only need the four connection values (not the full script) for the demo page in Section 2:</p>
     <div class="code-card">
       <div class="code-card-head"><span><span class="dot">●</span> connection.json</span><button class="copy-btn">Copy</button></div>
       <pre>{
-  "channelAddressIdentifier": "942c5e6d-e688-49c0-ad65-c1829e0130f8",
-  "OrganizationId": "00DjW000000QxVu",
-  "DeveloperName": "NTOShopperAgent_ES",
-  "Url": "https://orgfarm-0389a86d66.my.salesforce-scrt.com"
+  "channelAddressIdentifier": "866ca16e-f5c9-49f5-b2b5-250c5f4a34ee",
+  "OrganizationId": "00DWt00000KCYnB",
+  "DeveloperName": "NTO_Shopper_Agent_ES_Custom",
+  "Url": "https://storm-b76c200d4b76c7.my.salesforce-scrt.com"
 }</pre>
     </div>
     <div class="callout warn">
@@ -308,10 +368,10 @@
     <div class="code-card">
       <div class="code-card-head"><span><span class="dot">●</span> connection.json</span><button class="copy-btn">Copy</button></div>
       <pre>{
-  "channelAddressIdentifier": "942c5e6d-e688-49c0-ad65-c1829e0130f8",
-  "OrganizationId": "00DjW000000QxVu",
-  "DeveloperName": "NTOShopperAgent_ES",
-  "Url": "https://orgfarm-0389a86d66.my.salesforce-scrt.com"
+  "channelAddressIdentifier": "866ca16e-f5c9-49f5-b2b5-250c5f4a34ee",
+  "OrganizationId": "00DWt00000KCYnB",
+  "DeveloperName": "NTO_Shopper_Agent_ES_Custom",
+  "Url": "https://storm-b76c200d4b76c7.my.salesforce-scrt.com"
 }</pre>
     </div>
     <div class="callout info">
@@ -320,7 +380,7 @@
     </div>
 
     <h2>2.3 Connect and chat</h2>
-    <p>Click <strong>Connect</strong>. In one step the demo parses the pasted JSON — filling in the SCRT2 URL, Organization ID, and ES Developer Name — and connects. The widget loads and the agent greets you with its welcome message.</p>
+    <p>Click <strong>Connect</strong>. The widget loads and the agent greets you with its welcome message.</p>
     <figure>
       <img src="images/section-2/01-welcome.png" alt="The demo page with the chat widget open, showing the NTO Shopper Agent welcome message" />
     </figure>
@@ -527,6 +587,32 @@
     btn.addEventListener('click', function () {
       var pre = btn.closest('.code-card').querySelector('pre');
       navigator.clipboard.writeText(pre.innerText).then(function () {
+        var old = btn.textContent;
+        btn.textContent = 'Copied ✓';
+        btn.classList.add('copied');
+        setTimeout(function () { btn.textContent = old; btn.classList.remove('copied'); }, 1500);
+      });
+    });
+  });
+
+  // Org tabs — switch the active form-values panel (scoped per .org-selector)
+  document.querySelectorAll('.org-selector').forEach(function (selector) {
+    var tabs = selector.querySelectorAll('.org-tab');
+    var panels = selector.querySelectorAll('.org-panel');
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var org = tab.getAttribute('data-org');
+        tabs.forEach(function (t) { t.classList.toggle('active', t === tab); });
+        panels.forEach(function (p) { p.classList.toggle('hidden', p.getAttribute('data-org') !== org); });
+      });
+    });
+  });
+
+  // Per-field copy — copy a single form value to the clipboard
+  document.querySelectorAll('.rcopy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var v = btn.closest('.valwrap').querySelector('.v');
+      navigator.clipboard.writeText(v.innerText).then(function () {
         var old = btn.textContent;
         btn.textContent = 'Copied ✓';
         btn.classList.add('copied');
