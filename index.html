@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shopper Agent Workshop Demo</title>
+  <title>Shopper Agent Playground</title>
   <style>
     :root {
       --brand: #0176d3;
@@ -45,6 +45,11 @@
       cursor: pointer;
     }
     header.appbar button:hover { background: rgba(255,255,255,0.24); }
+    .appbar-actions { display: flex; align-items: center; gap: 12px; }
+    .ui-switch { display: inline-flex; gap: 3px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.3); border-radius: 999px; padding: 4px; }
+    .ui-switch .seg { padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: #fff; text-decoration: none; white-space: nowrap; transition: background .15s, color .15s; }
+    .ui-switch a.seg:hover { background: rgba(255,255,255,0.18); }
+    .ui-switch .seg.active { background: #fff; color: var(--brand-dark); }
 
     main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; }
 
@@ -120,8 +125,14 @@
 </head>
 <body>
   <header class="appbar">
-    <div class="title" id="appbar-title">Shopper Agent Workshop Demo</div>
-    <button id="settings-btn" style="display:none;">⚙️ Settings</button>
+    <div class="title" id="appbar-title">Shopper Agent Playground</div>
+    <div class="appbar-actions">
+      <nav class="ui-switch" aria-label="Switch interface">
+        <a class="seg" href="docs/workbook.html">📖 Workshop</a>
+        <span class="seg active" aria-current="page">🎮 Playground</span>
+      </nav>
+      <button id="settings-btn" style="display:none;">⚙️ Settings</button>
+    </div>
   </header>
 
   <main>
@@ -342,7 +353,7 @@
 
       function mountWidget(cfg) {
         showChatView();
-        $("appbar-title").textContent = cfg.headerText || "Shopper Agent Workshop Demo";
+        $("appbar-title").textContent = cfg.headerText || "Shopper Agent Playground";
         loadError.style.display = "none";
         $("chat").style.display = "block";
 
