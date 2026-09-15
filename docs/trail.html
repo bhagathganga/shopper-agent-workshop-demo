@@ -263,6 +263,7 @@
       <li><a href="#section-1">Build a Shopper Agent with Shopper Agent Setup</a></li>
       <li><a href="#section-2">Configure &amp; test the agent on a standalone page</a></li>
       <li><a href="#section-3">Make the agent your own (customize the script)</a></li>
+      <li><a href="#section-4">Give the agent knowledge from documents</a></li>
     </ol>
   </nav>
 
@@ -579,6 +580,141 @@
     <a class="backtop" href="#top">↑ Back to contents</a>
   </section>
 
+  <!-- ==================== SECTION 4 ==================== -->
+  <section class="step" id="section-4">
+    <h1 class="section-title"><span class="num">4</span> Give the agent knowledge from documents <span class="tag-optional">Optional</span></h1>
+
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p><strong>Optional.</strong> Sections 1&ndash;3 already give you a complete, working Shopper Agent. This section is a bonus: add it if you have time or want richer, document-grounded answers.</p>
+    </div>
+
+    <p>The agent script shapes <em>behavior</em>, but it ships with an <strong>empty</strong> Site FAQ — a placeholder subagent with no content loaded. So policy questions like &ldquo;do you accept returns?&rdquo; don't work yet: the agent just says it couldn't find that information.</p>
+
+    <p>You have two ways to fix that. You <em>could</em> add your own instructions to this placeholder subagent — enough to route the shopper to a support page or answer a few basics inline. But that hard-codes knowledge into the script and doesn't scale as your policies change. The ideal approach — and what this section does — is to <strong>delete this placeholder</strong> and add the packaged <strong>B2C Commerce Site FAQs</strong> action instead, which grounds answers in documents you load into an <strong>Agentforce Data Library</strong>. It reads the right passage at runtime — no script change needed when a policy is updated.</p>
+
+    <p>Here's the difference this section makes:</p>
+    <table class="data">
+      <thead>
+        <tr><th>Shopper asks</th><th>Before (empty Site FAQ)</th><th>After (Data Library)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="q">&ldquo;Do you accept returns?&rdquo;</td><td>&ldquo;I couldn't find information about that&rdquo;</td><td>Yes — 28 days, unworn, with the Returns Form</td></tr>
+        <tr><td class="q">&ldquo;Which carrier, and how fast?&rdquo;</td><td>&ldquo;I couldn't find information about that&rdquo;</td><td>UPS Standard, dispatched within 2 working days</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p><strong>Prerequisite</strong> (already set up for this workshop org): Agentforce and Data Cloud are enabled.</p>
+    </div>
+
+    <h2>4.1 Upload the Site FAQ to a Data Library</h2>
+    <p>Load one file — <code>NTO Site FAQ.pdf</code> (shipping, returns, contact, and privacy) — into a library named <code>NTOSiteFAQ</code>. That name becomes the library's <strong>API name</strong>, which you'll reference in the next step.</p>
+    <p>📄 <a href="files/NTO-Site-FAQ.pdf" download>Download <strong>NTO Site FAQ.pdf</strong></a> to use for this step.</p>
+    <ol class="steps">
+      <li>In <strong>Setup</strong>, use <strong>Quick Find</strong> to search <code>agentforce data</code> and open <strong>Agentforce Data Library</strong>.
+        <figure>
+          <img src="images/section-4/upload-01-nav.png" alt="Setup Quick Find showing the Agentforce Data Library entry under Einstein" />
+        </figure>
+      </li>
+      <li>Click <strong>Add Data</strong> &rarr; <strong>Upload Files</strong>.
+        <figure>
+          <img src="images/section-4/upload-02-add-data.png" alt="Agentforce Data Library home with the Add Data menu open on Upload Files" />
+        </figure>
+      </li>
+      <li>Name the library <span class="valwrap valwrap-inline"><code class="v">NTOSiteFAQ</code><button class="rcopy">Copy</button></span> (the <strong>API Name</strong> fills in to match), leave <strong>Use Intelligent Context</strong> on, then <strong>Upload Files</strong> &rarr; select <code>NTO Site FAQ.pdf</code> and <strong>Save</strong>.
+        <figure>
+          <img src="images/section-4/upload-03-new-library.png" alt="New data library form with Name and API Name set to NTOSiteFAQ and the PDF added" />
+        </figure>
+      </li>
+      <li>The library indexes automatically — it walks through creating data lake objects, a search index, a retriever, and indexing the files.
+        <figure>
+          <img src="images/section-4/upload-04-indexing.png" alt="Library status In Progress, indexing the uploaded files" />
+        </figure>
+      </li>
+      <li>Wait for the status to turn <strong>Ready</strong> (a few minutes).
+        <figure>
+          <img src="images/section-4/upload-05-ready.png" alt="Library status Ready with all indexing steps complete" />
+        </figure>
+      </li>
+    </ol>
+
+    <h2>4.2 Add the B2C Commerce Site FAQs action</h2>
+    <p>Everything here happens in <strong>Agent Builder</strong>. You add a packaged subagent, point its action at your library, and remove the placeholder FAQ subagent.</p>
+    <ol class="steps">
+      <li>If the active version is read-only, click <strong>New Version</strong> (top-right) first to create an editable draft.
+        <figure>
+          <img src="images/section-4/00-new-version.png" alt="Agentforce Builder showing NTO Shopper Agent3 Version 6 (Active) with the New Version button in the top-right" />
+        </figure>
+      </li>
+      <li>In the <strong>Explorer</strong>, next to <strong>Subagents</strong>, click <strong>+</strong> &rarr; <strong>Add from Asset Library</strong>.
+        <figure>
+          <img src="images/section-4/01-add-from-asset-library.png" alt="The Subagents + menu open in Agent Builder, showing Add from Asset Library" />
+        </figure>
+      </li>
+      <li>Search <code>b2c commerce site</code>, select <strong>B2C Commerce Site FAQs</strong>, and click <strong>Add to Agent</strong>. It's added to the Agent Router.
+        <figure>
+          <img src="images/section-4/02-search-select.png" alt="The Subagents asset picker with B2C Commerce Site FAQs found and a Select button" />
+          <img src="images/section-4/03-added-to-router.png" alt="Toast confirming B2CCommerceSiteFAQs was added to the Agent Router" />
+        </figure>
+      </li>
+      <li>Open the new <strong>B2C Commerce Site FAQs</strong> subagent and find its <code>actions</code> block. On the <code>AnswerSiteFAQs</code> action, set the library API name to <code>NTOSiteFAQ</code>:
+        <div class="code-card">
+          <div class="code-card-head"><span><span class="dot">●</span> AnswerSiteFAQs</span><button class="copy-btn">Copy</button></div>
+          <pre>with libraryApiNamesCsv=NTOSiteFAQ</pre>
+        </div>
+        (leave <code>topCount=3</code> and <code>minimumScore=0.7</code> as-is).
+        <figure>
+          <img src="images/section-4/04-library-api-name.png" alt="The AnswerSiteFAQs action block with libraryApiNamesCsv set to NTOSiteFAQ" />
+        </figure>
+      </li>
+      <li>Delete the old placeholder <strong>Site FAQ</strong> subagent: right-click it &rarr; <strong>Delete</strong> &rarr; <strong>Yes, Delete</strong>.
+        <figure>
+          <img src="images/section-4/05-delete-site-faq.png" alt="Right-click menu on the Site FAQ subagent showing Delete" />
+          <img src="images/section-4/06-confirm-delete.png" alt="Delete Site FAQ confirmation dialog with Yes, Delete" />
+        </figure>
+      </li>
+      <li><strong>Save</strong>.
+        <figure>
+          <img src="images/section-4/07-saved.png" alt="Toasts confirming changes were saved and site_faq was removed from the Agent Router" />
+        </figure>
+      </li>
+      <li><strong>Commit</strong> the version to lock in a snapshot — click <strong>Commit</strong> and confirm in the <em>Commit this version?</em> dialog.
+        <figure>
+          <img src="images/section-4/commit-01.png" alt="The Commit this version? dialog in Agent Builder" />
+        </figure>
+      </li>
+      <li><strong>Activate</strong> the committed version so it goes live — confirm in the <em>Ready to activate your agent?</em> dialog. This deactivates the previously active version.
+        <figure>
+          <img src="images/section-4/activate-02.png" alt="The Ready to activate your agent? dialog in Agent Builder" />
+        </figure>
+      </li>
+    </ol>
+
+    <h3>Test it</h3>
+    <p>In the <strong>Conversation Preview</strong> (or your demo app), ask questions answered only in the doc:</p>
+    <table class="data">
+      <thead>
+        <tr><th>Ask this</th><th>You should get</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="q">Which shipping carrier do you use?</td><td>UPS Standard</td></tr>
+        <tr><td class="q">What's your return window?</td><td>28 days</td></tr>
+        <tr><td class="q">Can I have my personal data deleted?</td><td>Contact the Data Protection Officer</td></tr>
+      </tbody>
+    </table>
+    <div class="callout warn">
+      <span class="ico">⚠️</span>
+      <p>If it says it can't find the answer, check that the library is <strong>Ready</strong> and that <code>libraryApiNamesCsv</code> matches the library's API name exactly.</p>
+    </div>
+
+    <div class="callout tip">
+      <span class="ico">💡</span>
+      <p><strong>Optional:</strong> the same pattern works for product FAQs — upload a product-FAQ document to its own library and add the packaged <strong>B2C Commerce Product FAQs</strong> action, pointing it at that library for detailed per-product answers.</p>
+    </div>
+    <a class="backtop" href="#top">↑ Back to contents</a>
+  </section>
 
 </div>
 
