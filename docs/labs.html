@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shopper Agent Workshop — Step-by-Step Workbook</title>
+<style>
+  :root {
+    --brand: #0176d3;
+    --brand-dark: #032d60;
+    --bg: #eef2f8;
+    --card: #ffffff;
+    --border: #d8dde6;
+    --text: #16325c;
+    --muted: #5c6b7a;
+    --code-bg: #0d1b2a;
+    --code-fg: #e7edf5;
+    --chip: #eef4fb;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Hero ---------- */
+  header.hero {
+    background: linear-gradient(135deg, #021b3f 0%, var(--brand-dark) 45%, var(--brand) 100%);
+    color: #fff;
+    padding: 52px 24px 46px;
+    text-align: center;
+  }
+  .hero-top { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+  .hero-brand { display: inline-flex; align-items: center; gap: 9px; }
+  .hero-brand svg { width: 40px; height: 28px; display: block; }
+  .hero-brand .wordmark { font-size: 20px; font-weight: 700; letter-spacing: -.01em; color: #fff; }
+  header.hero h1 { margin: 0 0 10px; font-size: 32px; letter-spacing: -.01em; }
+  header.hero p { margin: 0 auto; max-width: 620px; opacity: .92; font-size: 16px; }
+  .hero-badges { margin-top: 18px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .hero-badges span {
+    background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25);
+    padding: 5px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+  }
+  .ui-switch { display: inline-flex; gap: 3px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 4px; }
+  .hero .ui-switch { margin-bottom: 0; }
+  .ui-switch .seg { padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: #fff; text-decoration: none; white-space: nowrap; transition: background .15s, color .15s; }
+  .ui-switch a.seg:hover { background: rgba(255,255,255,.18); }
+  .ui-switch .seg.active { background: #fff; color: var(--brand-dark); }
+
+  .layout { max-width: 920px; margin: 0 auto; padding: 0 20px 90px; }
+
+  /* ---------- Table of contents ---------- */
+  nav.toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin: -28px auto 34px;
+    box-shadow: 0 12px 40px rgba(3,45,96,.14);
+    position: relative;
+  }
+  nav.toc h2 { margin: 0 0 14px; font-size: 12.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  nav.toc ol { margin: 0; padding: 0; list-style: none; counter-reset: toc; display: grid; gap: 8px; }
+  nav.toc li { counter-increment: toc; margin: 0; }
+  nav.toc a {
+    display: flex; align-items: center; gap: 12px;
+    color: var(--brand-dark); text-decoration: none; font-weight: 600;
+    padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+    transition: background .15s, border-color .15s, transform .1s;
+  }
+  nav.toc a::before {
+    content: counter(toc);
+    flex: 0 0 28px; height: 28px; border-radius: 50%;
+    background: var(--brand); color: #fff; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  nav.toc a:hover { background: var(--chip); border-color: var(--brand); transform: translateX(2px); }
+
+  /* ---------- Section cards ---------- */
+  section.step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 10px 34px 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 22px rgba(3,45,96,.07);
+    scroll-margin-top: 20px;
+  }
+  h1.section-title {
+    display: flex; align-items: center; gap: 14px;
+    color: var(--brand-dark);
+    border-bottom: 3px solid #e3ebf5;
+    padding-bottom: 16px; margin-top: 26px;
+    font-size: 25px; letter-spacing: -.01em;
+  }
+  h1.section-title .num {
+    flex: 0 0 42px; height: 42px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--brand-dark), var(--brand));
+    color: #fff; font-size: 20px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  h1.section-title .tag-optional { font-size: 12px; letter-spacing: .04em; }
+  .tag-optional {
+    display: inline-block; padding: 3px 10px; border-radius: 999px;
+    background: #eef3fb; color: var(--brand); border: 1px solid var(--border);
+    font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    vertical-align: middle;
+  }
+  h2 {
+    color: var(--brand-dark); font-size: 19px; margin-top: 34px;
+    padding-left: 12px; border-left: 4px solid var(--brand);
+  }
+  h3 { color: var(--text); font-size: 15.5px; margin-top: 26px; }
+  h3 code { font-size: 13.5px; }
+  p { margin: 12px 0; }
+
+  code {
+    background: var(--chip); color: #0b3d6b; padding: 1.5px 6px; border-radius: 5px;
+    font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  /* ---------- Callouts ---------- */
+  .callout {
+    display: flex; gap: 12px; align-items: flex-start;
+    margin: 18px 0; padding: 14px 16px; border-radius: 10px;
+    border: 1px solid; font-size: 14.5px;
+  }
+  .callout .ico { flex: 0 0 auto; font-size: 18px; line-height: 1.5; }
+  .callout p { margin: 0; }
+  .callout.info { background: #eef5fd; border-color: #bcdcf7; }
+  .callout.warn { background: #fff6e9; border-color: #f4d19b; }
+  .callout.tip  { background: #eefaf1; border-color: #b9e6c6; }
+
+  /* ---------- Config key/value table ---------- */
+  table.kv { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; overflow: hidden; border-radius: 10px; border: 1px solid var(--border); }
+  table.kv th, table.kv td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.kv tr:last-child td { border-bottom: none; }
+  table.kv td.field { width: 210px; color: var(--muted); font-weight: 600; }
+  table.kv td.val { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; word-break: break-word; }
+  table.kv tr.group th {
+    background: var(--brand-dark); color: #fff; font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+    padding: 8px 14px;
+  }
+
+  /* ---------- Comparison / test tables ---------- */
+  table.data { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  table.data th { background: #f2f6fb; color: var(--brand-dark); text-align: left; padding: 11px 14px; font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid var(--border); }
+  table.data td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.data tr:last-child td { border-bottom: none; }
+  table.data td.q { font-style: italic; color: var(--text); }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+  .pill.script { background: #e7f0fb; color: #0b5cad; }
+  .pill.doc { background: #eafaf0; color: #1b7a44; }
+
+  /* ---------- Code cards ---------- */
+  .code-card { margin: 16px 0; border-radius: 10px; overflow: hidden; border: 1px solid #1c3350; box-shadow: 0 6px 18px rgba(3,45,96,.14); }
+  .code-card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #16283f; color: #cfe0f2; padding: 8px 14px; font-size: 12.5px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .code-card-head .dot { color: #ffbf5e; }
+  .code-card pre {
+    margin: 0; background: var(--code-bg); color: var(--code-fg);
+    padding: 16px; overflow-x: auto; font-size: 13px; line-height: 1.6;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .copy-btn {
+    background: rgba(255,255,255,.1); color: #cfe0f2; border: 1px solid rgba(255,255,255,.2);
+    border-radius: 6px; padding: 3px 10px; font-size: 12px; cursor: pointer; transition: background .15s;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,.22); }
+  .copy-btn.copied { background: #1b7a44; color: #fff; border-color: #1b7a44; }
+
+  /* ---------- Org tabs (form values) ---------- */
+  .org-selector { margin: 16px 0; }
+  .org-tabs { display: flex; gap: 6px; }
+  .org-tab { padding: 9px 18px; border: 1px solid var(--border); border-bottom: none; border-radius: 10px 10px 0 0; background: var(--chip); color: var(--brand-dark); font-weight: 600; font-size: 14px; cursor: pointer; transition: background .15s, color .15s; }
+  .org-tab:hover { background: #e2edf9; }
+  .org-tab.active { background: var(--brand-dark); color: #fff; border-color: var(--brand-dark); }
+  .org-tab .sub { font-weight: 500; opacity: .75; font-size: 12px; }
+  .org-panel { border: 1px solid var(--border); border-radius: 0 10px 10px 10px; padding: 4px 16px 16px; }
+  .org-panel.hidden { display: none; }
+  .org-panel table.kv { margin-top: 14px; }
+
+  /* ---------- Per-field copy button ---------- */
+  .valwrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .valwrap.valwrap-inline { display: inline-flex; width: auto; gap: 6px; vertical-align: middle; }
+  .callout .eventcode { display: inline-flex; align-items: center; flex-wrap: nowrap; gap: 10px; width: auto; margin-top: 10px; padding: 5px 6px 5px 14px; background: #fff; border: 2px dashed var(--brand); border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .eventcode .label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--brand); white-space: nowrap; }
+  .eventcode .code { font-size: 18px; font-weight: 800; letter-spacing: .1em; color: var(--brand-dark); word-break: normal; white-space: nowrap; }
+  .eventcode .rcopy { font-size: 12px; padding: 5px 11px; }
+  .valwrap .v { word-break: break-word; }
+  .rcopy { flex: 0 0 auto; background: var(--chip); border: 1px solid var(--border); color: var(--brand); border-radius: 6px; padding: 4px 13px; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: background .15s, color .15s; font-family: inherit; }
+  .rcopy:hover { background: #e2edf9; }
+  .rcopy.copied { background: #1b7a44; color: #fff; border-color: #1b7a44; }
+
+  /* ---------- Steps list ---------- */
+  ol.steps { counter-reset: st; list-style: none; padding: 0; margin: 16px 0; }
+  ol.steps > li {
+    counter-increment: st; position: relative; padding: 2px 0 4px 46px; margin: 0 0 18px;
+  }
+  ol.steps > li::before {
+    content: counter(st); position: absolute; left: 0; top: 0;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--chip); color: var(--brand-dark); border: 1.5px solid var(--brand);
+    font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center;
+  }
+  ul { padding-left: 22px; }
+  li { margin: 8px 0; }
+
+  /* ---------- Figures ---------- */
+  figure { margin: 14px 0; padding: 10px; background: #f7f9fc; border: 1px solid var(--border); border-radius: 12px; display: grid; gap: 10px; }
+  figure img { max-width: 100%; border: 1px solid var(--border); border-radius: 8px; display: block; box-shadow: 0 2px 8px rgba(3,45,96,.08); }
+  figcaption { font-size: 12.5px; color: var(--muted); }
+
+  a { color: var(--brand); }
+  .done { margin-top: 22px; padding: 14px 16px; background: #eefaf1; border: 1px solid #b9e6c6; border-radius: 10px; font-weight: 600; color: #1b7a44; }
+  .backtop { display: inline-block; margin-top: 16px; font-size: 13px; color: var(--muted); text-decoration: none; }
+  .backtop:hover { text-decoration: underline; }
+
+  @media (max-width: 620px) {
+    section.step { padding: 8px 18px 22px; }
+    table.kv td.field { width: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-top">
+    <div class="hero-brand">
+      <svg viewBox="0 0 100 70" role="img" aria-label="Salesforce" focusable="false">
+        <path fill="#ffffff" d="M41.6 15.2c3.2-3.3 7.7-5.4 12.6-5.4 6.6 0 12.3 3.7 15.4 9.1 2.7-1.2 5.6-1.8 8.8-1.8 12 0 21.8 9.9 21.8 22.1S90.4 61.3 78.4 61.3c-1.5 0-2.9-.1-4.3-.4-2.7 4.8-7.9 8.1-13.8 8.1-2.5 0-4.8-.6-6.9-1.6-2.8 6.5-9.2 11-16.7 11-7.8 0-14.5-4.9-17.1-11.8-1.1.2-2.3.4-3.5.4C6.6 67 0 60.3 0 52.1c0-5.5 3-10.3 7.4-12.9-.9-2.1-1.4-4.4-1.4-6.8C6 22.6 14.4 14.2 24.9 14.2c6.2 0 11.7 2.9 15.2 7.5"/>
+      </svg>
+      <span class="wordmark">Salesforce</span>
+    </div>
+    <nav class="ui-switch" aria-label="Switch interface">
+      <span class="seg active" aria-current="page">📖 Workshop</span>
+      <a class="seg" href="../index.html">🎮 Playground</a>
+    </nav>
+  </div>
+  <h1>How to Launch a Shopper Agent</h1>
+  <p>A step-by-step workbook: build, deploy, customize, and ground a B2C Commerce shopper agent — start to finish.</p>
+  <div class="hero-badges">
+    <span>🛍️ Northern Trail Outfitters</span>
+    <span>⚡ Agentforce</span>
+    <span>🧩 3 core + 1 optional</span>
+  </div>
+</header>
+
+<div class="layout">
+
+  <nav class="toc" id="top">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#section-1">Build a Shopper Agent with Shopper Agent Setup</a></li>
+      <li><a href="#section-2">Configure &amp; test the agent on a standalone page</a></li>
+      <li><a href="#section-3">Make the agent your own (customize the script)</a></li>
+    </ol>
+  </nav>
+
+  <!-- ==================== SECTION 1 ==================== -->
+  <section class="step" id="section-1">
+    <h1 class="section-title"><span class="num">1</span> Build a Shopper Agent with Shopper Agent Setup</h1>
+
+    <p>You'll stand up a working <strong>B2C Commerce shopper agent</strong> from a single guided form. Point it at the Northern Trail Outfitters (NTO) storefront, click <strong>Create Agent</strong>, and Shopper Agent Setup generates the agent, its subagents, and an Embedded Service deployment for you. At the end you copy a small connection snippet — that's all Section 2 needs to bring the agent to life on a web page.</p>
+
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <div>
+        <p><strong>Prerequisite:</strong> a Salesforce trial org. Grab one from <a href="https://orgfarm.salesforce.com/signup" target="_blank" rel="noopener">orgfarm.salesforce.com/signup</a> using the Event Code below (available for one week).</p>
+        <div class="valwrap eventcode">
+          <span class="label">Event Code</span>
+          <code class="v code">RLYXNZ7B</code>
+          <button class="rcopy">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <h2>1.1 Open Commerce Shopper Agent Setup</h2>
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p><strong>First login?</strong> Dismiss the <strong>&ldquo;Canvas - Q_Passport&rdquo;</strong> error that appears when you initially log in — it's harmless and won't affect the workshop.</p>
+    </div>
+    <p>Using the <strong>Setup gear icon</strong> in the top-right navigation area, click <strong>Setup</strong> in the drop-down menu. When the Setup window appears, use the <strong>Quick Find</strong> box (left navigation area) to search for <code>Commerce Shopper Agent Setup</code>, then open it (under Feature Settings &rarr; Commerce).</p>
+    <figure>
+      <img src="images/section-1/00-setup-gear.png" alt="Salesforce home with the Setup gear icon highlighted in the top-right navigation area" />
+      <figcaption>The <strong>Setup gear icon</strong> in the top-right navigation area &rarr; <strong>Setup</strong>.</figcaption>
+    </figure>
+    <figure>
+      <img src="images/section-1/01-nav-setup.png" alt="Setup Quick Find showing commerce, with Commerce Shopper Agent Setup highlighted in the tree" />
+      <figcaption>Setup &rarr; Quick Find &ldquo;commerce&rdquo; &rarr; Commerce Shopper Agent Setup.</figcaption>
+    </figure>
+
+    <h2>1.2 Fill in the agent details</h2>
+    <p>The form opens with placeholder examples. Northern Trail Outfitters is a demo storefront that sells outdoor apparel — use these instance details. Pick your org below and use the <strong>Copy</strong> button on each field to paste it straight into the Setup form.</p>
+
+    <div class="callout tip">
+      <span class="ico">💡</span>
+      <p>These values need to match exactly, so we recommend using the <strong>Copy</strong> button on each field rather than retyping — a small typo or an extra space (especially in the URLs or the SLAS Client Secret) is the most common reason an agent doesn't connect.</p>
+    </div>
+
+    <div class="org-selector">
+      <div class="org-tabs" role="tablist">
+        <button class="org-tab active" data-org="zzsa" role="tab">zzsa14 <span class="sub">(default)</span></button>
+        <button class="org-tab" data-org="tbhc" role="tab">TBHC</button>
+      </div>
+
+      <!-- zzsa14 (default) -->
+      <div class="org-panel" data-org="zzsa">
+        <table class="kv">
+          <tr class="group"><th colspan="2">Agent Details</th></tr>
+          <tr><td class="field">Agent Type</td><td class="val"><div class="valwrap"><span class="v">Agent Script (Enhanced Search)</span></div></td></tr>
+          <tr><td class="field">Agent User</td><td class="val"><div class="valwrap"><span class="v">Create a new user</span></div></td></tr>
+          <tr><td class="field">Agent Name</td><td class="val"><div class="valwrap"><span class="v">NTO Shopper Agent</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Company</td><td class="val"><div class="valwrap"><span class="v">Northern Trail Outfitters</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr class="group"><th colspan="2">Salesforce Commerce Cloud (B2C)</th></tr>
+          <tr><td class="field">Storefront Type</td><td class="val"><div class="valwrap"><span class="v">SFRA</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">B2C Org ID</td><td class="val"><div class="valwrap"><span class="v">f_ecom_zzsa_014</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Site ID</td><td class="val"><div class="valwrap"><span class="v">nto</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Storefront URL</td><td class="val"><div class="valwrap"><span class="v">https://zzsa-014.my.commercecloud.salesforce.com/s/nto/en_US/home</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Locale</td><td class="val"><div class="valwrap"><span class="v">en-US</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">CDN Hostname</td><td class="val"><div class="valwrap"><span class="v">https://s3.amazonaws.com</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr class="group"><th colspan="2">SLAS (Shopper Login &amp; API Access)</th></tr>
+          <tr><td class="field">Commerce API URL</td><td class="val"><div class="valwrap"><span class="v">https://kv7kzm78.api.commercecloud.salesforce.com</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">SLAS Client ID</td><td class="val"><div class="valwrap"><span class="v">80c58f7c-9b04-4b2b-9959-835ab279ed4c</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">SLAS Client Secret</td><td class="val"><div class="valwrap"><span class="v">dDCKHl-B3DxdmPvlmDrJYi027mc1OFmcYL_JpkjS1gI</span><button class="rcopy">Copy</button></div></td></tr>
+        </table>
+        <div class="callout warn">
+          <span class="ico">⚠️</span>
+          <p>The <strong>SLAS Client Secret</strong> above is for this event only and will be rotated afterward.</p>
+        </div>
+      </div>
+
+      <!-- TBHC (optional) -->
+      <div class="org-panel hidden" data-org="tbhc">
+        <table class="kv">
+          <tr class="group"><th colspan="2">Agent Details</th></tr>
+          <tr><td class="field">Agent Type</td><td class="val"><div class="valwrap"><span class="v">Agent Script (Enhanced Search)</span></div></td></tr>
+          <tr><td class="field">Agent User</td><td class="val"><div class="valwrap"><span class="v">Create a new user</span></div></td></tr>
+          <tr><td class="field">Agent Name</td><td class="val"><div class="valwrap"><span class="v">NTOShopperAgent</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Company</td><td class="val"><div class="valwrap"><span class="v">Northern Trail Outfitters</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr class="group"><th colspan="2">Salesforce Commerce Cloud (B2C)</th></tr>
+          <tr><td class="field">Storefront Type</td><td class="val"><div class="valwrap"><span class="v">SFRA</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">B2C Org ID</td><td class="val"><div class="valwrap"><span class="v">f_ecom_tbhc_prd</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Site ID</td><td class="val"><div class="valwrap"><span class="v">nto</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Storefront URL</td><td class="val"><div class="valwrap"><span class="v">https://www.shop.prd.tbhc.sfcc-store-internal.net/on/demandware.store/Sites-nto-Site</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">Locale</td><td class="val"><div class="valwrap"><span class="v">en-US</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">CDN Hostname</td><td class="val"><div class="valwrap"><span class="v">https://s3.amazonaws.com</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr class="group"><th colspan="2">SLAS (Shopper Login &amp; API Access)</th></tr>
+          <tr><td class="field">Commerce API URL</td><td class="val"><div class="valwrap"><span class="v">https://sandbox-001.api.commercecloud.salesforce.com</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">SLAS Client ID</td><td class="val"><div class="valwrap"><span class="v">a581cb19-12e9-4620-bb77-8551b51ad56e</span><button class="rcopy">Copy</button></div></td></tr>
+          <tr><td class="field">SLAS Client Secret</td><td class="val"><div class="valwrap"><span class="v">7R4OlmAFtpujGOZ0Ur36K3wMpoN9YVFbGSCHf_Wrba8</span><button class="rcopy">Copy</button></div></td></tr>
+        </table>
+        <div class="callout warn">
+          <span class="ico">⚠️</span>
+          <p>The <strong>SLAS Client Secret</strong> above is for this event only and will be rotated afterward.</p>
+        </div>
+        <div class="callout warn">
+          <span class="ico">⚠️</span>
+          <p><strong>Troubleshooting (TBHC) — agent fails while fetching an access token in Builder?</strong> Go to <strong>Setup &rarr; Named Credentials</strong> and find the three generated credentials ending in <code>_ANC</code>, <code>_GNC</code>, and <code>_SFNC</code>. On each, add a <strong>Custom Header</strong> named <code>x-mostly-harmless</code> with value <code>DF26</code> at the next available sequence, then save. If there's no <code>_SFNC</code>, just do <code>_ANC</code> and <code>_GNC</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <figure>
+      <img src="images/section-1/03-form-filled.png" alt="The setup form filled with NTO values and the Create Agent button" />
+      <figcaption>The setup form filled with the NTO values above.</figcaption>
+    </figure>
+
+    <h2>1.3 Create the agent</h2>
+    <p>Click <strong>Create Agent</strong>. You'll get a <strong>Success</strong> toast — the agent build runs in the background and finishes in 2 to 5 mins (you'll get an in-app notification).</p>
+    <figure>
+      <img src="images/section-1/04-agent-in-progress.png" alt="Commerce Shopper Agent Setup showing an orange banner reading Agent creation is in progress. Expect an in-app notification in ~2 min." />
+      <figcaption>While it builds, Setup shows &ldquo;Agent creation is in progress&rdquo; — just wait for the notification; you don't need to do anything.</figcaption>
+    </figure>
+    <figure>
+      <img src="images/section-1/04-agent-created.png" alt="Commerce Shopper Agent Setup showing a green banner reading Agent creation completed successfully, with the new agent name and its Embedded Service Deployment" />
+      <figcaption>When the build finishes, Setup shows &ldquo;Agent creation completed successfully&rdquo; with your agent and its Embedded Service deployment.</figcaption>
+    </figure>
+
+    <h2>1.4 Get the connection snippet</h2>
+    <p>Setup already created the Embedded Service deployment for you — you don't build one. In the Shopper Agent Setup UI, click the <strong>Embedded Service Deployment</strong> link that appears <em>just below</em> the green-shaded <strong>&ldquo;Agent creation completed successfully&rdquo;</strong> message. (It's easy to miss — look directly under the green banner.) If you've navigated away, you can also reach it via Quick Find <code>embedded</code> &rarr; <strong>Embedded Service Deployments</strong>, opening the one named after your agent, e.g. <code>NTO_Shopper_Agent_ES_Custom</code>. On the deployment page, click <strong>Install Code Snippet</strong> &rarr; <strong>Get Code</strong>, then <strong>Copy to Clipboard</strong>.</p>
+    <div class="callout warn">
+      <span class="ico">⚠️</span>
+      <p>These values are unique to your org and deployment — <strong>copy your own</strong>; don't reuse the example above.</p>
+    </div>
+    <figure>
+      <img src="images/section-1/10-code-snippet.png" alt="The Custom Client Code Snippet page showing the connection JSON selected and the Copy to Clipboard button" />
+    </figure>
+
+    <p class="done">✅ You now have a working Shopper Agent and the connection details to deploy it.</p>
+    <a class="backtop" href="#top">↑ Back to contents</a>
+  </section>
+
+  <!-- ==================== SECTION 2 ==================== -->
+  <section class="step" id="section-2">
+    <h1 class="section-title"><span class="num">2</span> Configure &amp; test the agent on a standalone page</h1>
+
+    <p>You don't need a storefront to try the agent. This demo playground is a single static page that loads the chat widget and connects to your agent using the connection JSON you copied in Section 1. Paste, connect, and chat.</p>
+
+    <h2>2.1 Open the demo playground</h2>
+    <p>Open <a href="https://bhagathganga.github.io/shopper-agent-workshop-demo/" target="_blank" rel="noopener">bhagathganga.github.io/shopper-agent-workshop-demo</a> <strong>in a new tab</strong> (right-click &rarr; <em>Open in new tab</em>) so you can keep this guide open alongside it. You'll see a config form. (If you don't, click the <strong>Settings</strong> button in the top-right.)</p>
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p>At the top of the page there's a <strong>Workshop / Playground</strong> toggle. <strong>Workshop</strong> is this step-by-step guide; <strong>Playground</strong> is the live demo page where you paste your connection JSON and chat with your agent. For this step, switch to <strong>Playground</strong>.</p>
+    </div>
+
+    <h2>2.2 Paste your connection JSON</h2>
+    <p>Paste the connection JSON from <strong>Step 1.4</strong> (already copied to clipboard) into the config box and click <strong>Fill fields from JSON</strong> — the SCRT2 URL, Organization ID, and ES Developer Name fill in automatically. Give it a <strong>chat header label</strong> (for example, <code>NTO Shopper Agent</code>).</p>
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p>Everything is stored only in your browser. Use <strong>your own</strong> org's connection JSON from Step 1.4.</p>
+    </div>
+    <figure>
+      <img src="images/section-2/03-config-form.png" alt="The demo playground's Connect your Shopper Agent config form with an empty connection JSON box, a chat header label field, and Connect, Load NTO example, and Clear saved config buttons" />
+      <figcaption>The demo playground's config form, ready for your connection JSON.</figcaption>
+    </figure>
+
+    <h2>2.3 Connect and chat</h2>
+    <p>With the JSON pasted and a chat header label set, click <strong>Connect</strong>. The widget loads and the agent greets you with its welcome message.</p>
+    <figure>
+      <img src="images/section-2/04-config-filled.png" alt="The demo config form filled with the connection values and a chat header label, ready to connect" />
+      <figcaption>The config form filled in and ready to connect.</figcaption>
+    </figure>
+    <p>Now play around. Use the <strong>expand icon</strong> in the top-right of the chat window to move the chat to the center of the screen for a bigger view. Then try a natural request like <strong>&ldquo;training for a marathon, what should I buy&rdquo;</strong> — the agent searches the NTO catalog and returns real products (running shoes, hydration gear) as a browsable carousel with names and prices.</p>
+    <figure>
+      <img src="images/section-2/05-chat-results.png" alt="The expanded chat widget centered on screen, showing the agent responding with a carousel of products and their prices from the NTO catalog" />
+      <figcaption>The expanded chat with a product carousel returned from the NTO catalog.</figcaption>
+    </figure>
+
+    <p class="done">✅ You have a working Shopper Agent you can drop into any storefront.</p>
+    <a class="backtop" href="#top">↑ Back to contents</a>
+  </section>
+
+  <!-- ==================== SECTION 3 ==================== -->
+  <section class="step" id="section-3">
+    <h1 class="section-title"><span class="num">3</span> Make the agent your own</h1>
+
+    <p>Personalize the agent script. Change one thing at a time and re-test in your demo app to see the effect.</p>
+
+    <h2>3.1 Open your agent in Agentforce Builder</h2>
+    <p>You just left off on the Embedded Service deployment screen. To customize the agent, open it in <strong>Agentforce Builder</strong>. In <strong>Setup</strong>, use <strong>Quick Find</strong> to search <code>agentforce agents</code> and open <strong>Agentforce Agents</strong> (under Einstein &rarr; Agentforce Studio), then click <strong>NTO Shopper Agent</strong> in the list to open it.</p>
+    <figure>
+      <img src="images/section-3/30-open-agent.png" alt="Setup → Agentforce Studio → Agentforce Agents list with NTO Shopper Agent, reached via Quick Find 'agentforce agents'" />
+      <figcaption>Setup &rarr; Quick Find &ldquo;agentforce agents&rdquo; &rarr; Agentforce Agents &rarr; open <strong>NTO Shopper Agent</strong>.</figcaption>
+    </figure>
+    <p>The agent opens on the <strong>Agent Summary</strong> canvas. (An <strong>Agentforce</strong> assistant panel may open on the right — click <strong>Hide Assistant</strong> to collapse it and give the graph more room.) It isn't one big prompt — it's a network of <strong>subagents</strong> that ship with it. The <strong>Agent Router</strong> reads each shopper message and hands it to the right specialist: <strong>Product Expert</strong> (search, recommendations, product details), <strong>Cart</strong>, <strong>Order Confirmation</strong>, and <strong>Site FAQ</strong> — plus built-in guardrails (Prompt Injection, Reverse Engineering, Inappropriate Content, Off Topic) and <strong>Escalation</strong> to a human. You'll see them all in the <strong>Explorer</strong> tree on the left and on the graph.</p>
+    <figure>
+      <img src="images/section-3/30-subagents-graph.png" alt="Agentforce Builder Agent Summary graph: the Agent Router routing to the subagents the agent ships with, with the Subagents list expanded in the Explorer" />
+      <figcaption>The <strong>Agent Summary</strong> graph — the Agent Router routes to each subagent the agent already comes with.</figcaption>
+    </figure>
+    <p>Use the toggle in the top-right to switch from the graph to <strong>script mode</strong> (the <code>&lt;/&gt;</code> icon). This is the agent script you'll edit in the steps below — the same subagents, messages, and variables as editable text.</p>
+    <figure>
+      <img src="images/section-3/30-script-mode.png" alt="Agentforce Builder switched to script (code) mode via the </> toggle, showing the Commerce Shopper Agent script from the top with the Subagents tree expanded" />
+      <figcaption>Toggle to <strong>script mode</strong> (<code>&lt;/&gt;</code>, top-right) to read and edit the agent script directly.</figcaption>
+    </figure>
+
+    <h2>3.2 Welcome message</h2>
+    <p>The first line the agent says. In <strong>Agentforce Builder</strong>, open <strong>Settings &rarr; System Messages</strong> from the Explorer, and find <code>welcome</code> (under <code>system &rarr; messages</code>).</p>
+    <figure>
+      <img src="images/section-3/31-welcome-in-builder.png" alt="Agentforce Builder with Settings → System Messages open in the Explorer and the welcome message highlighted under system → messages" />
+      <figcaption>Settings &rarr; System Messages — the <code>welcome</code> line is under <code>system &rarr; messages</code>.</figcaption>
+    </figure>
+    <p>Swap in your own name:</p>
+    <div class="code-card">
+      <div class="code-card-head"><span><span class="dot">●</span> welcome</span><button class="copy-btn">Copy</button></div>
+      <pre>Hi, I'm Ava — your personal shopping assistant. What are you looking for today?</pre>
+    </div>
+    <p>Now publish the change so it goes live. First <strong>Save</strong> (top-right, or ⌘S / Ctrl+S) — this saves the current <em>Draft</em> version.</p>
+    <figure>
+      <img src="images/section-3/publish-01-save.png" alt="Agentforce Builder with the welcome message edited and the Save button highlighted in the top-right, Version 2 (Draft)" />
+      <figcaption><strong>Save</strong> (top-right, or ⌘S) — saves your Draft version.</figcaption>
+    </figure>
+    <p>Click <strong>Commit Version</strong> and confirm in the <em>Commit this version?</em> dialog. Committing takes a fixed snapshot you can always test against.</p>
+    <figure>
+      <img src="images/section-3/publish-02-commit.png" alt="The Commit this version? confirmation dialog in Agentforce Builder with the Commit button" />
+      <figcaption><strong>Commit</strong> — creates a fixed, testable snapshot of this version.</figcaption>
+    </figure>
+    <p>Finally, click <strong>Activate</strong> (top-right) and confirm. This makes the committed version live on the channels the agent is connected to — and deactivates the previously active version.</p>
+    <figure>
+      <img src="images/section-3/publish-03-activate.png" alt="Agentforce Builder showing Version 2 (Committed) with the Activate button in the top-right" />
+      <figcaption>Once committed, click <strong>Activate</strong> to make the new version live.</figcaption>
+    </figure>
+    <div class="callout tip">
+      <span class="ico">💡</span>
+      <p>This <strong>Save &rarr; Commit &rarr; Activate</strong> flow is how you publish <em>any</em> edit in this section — the retailer voice and shoe-finder changes below go live the same way. (The screenshots show a different sample greeting; the steps are identical.)</p>
+    </div>
+    <p>Now re-test in your demo app. If a chat is already open, it's still running the old session — open the widget's <strong>⋮</strong> menu and click <strong>Clear chat</strong> to start a fresh session and load the newly activated agent.</p>
+    <figure>
+      <img src="images/section-3/publish-04-clear-chat.png" alt="The demo playground chat widget's ⋮ menu open, showing Move right, Clear chat, and Download transcript options" />
+      <figcaption>In the demo app, open the widget's <strong>⋮</strong> menu &rarr; <strong>Clear chat</strong> to reload the new agent version.</figcaption>
+    </figure>
+    <p>The agent now opens with your new greeting.</p>
+    <figure>
+      <img src="images/section-3/31-welcome-result.png" alt="The demo playground showing the agent's new welcome message: Hi, I'm Ava — your personal shopping assistant. What are you looking for today?" />
+      <figcaption>Your edited welcome message, live in the demo app.</figcaption>
+    </figure>
+
+    <h2>3.3 Retailer voice</h2>
+    <p>Describe how your agent should sound. This shapes every reply. Open <strong>Variables</strong> in the Explorer and find <code>retailer_voice</code> (it ships as <code>"Friendly"</code>) — write your own, for example:</p>
+    <figure>
+      <img src="images/section-3/32-retailer-voice.png" alt="Agentforce Builder Variables view with retailer_voice found and its default value Friendly highlighted" />
+      <figcaption>Variables &rarr; <code>retailer_voice</code> — search the Variables file to jump straight to it.</figcaption>
+    </figure>
+    <div class="code-card">
+      <div class="code-card-head"><span><span class="dot">●</span> retailer_voice</span><button class="copy-btn">Copy</button></div>
+      <pre>Warm, upbeat concierge. Short, friendly replies. Plain language, at most one emoji, never pushy.</pre>
+    </div>
+    <p>Copy the message above or write your own, then publish it exactly as in Step 3.2: <strong>create a new version</strong> (if you're editing an active one), change the script, then <strong>Save &rarr; Commit &rarr; Activate</strong> — and <strong>Clear chat</strong> in your demo app to reload the session. Ask the agent anything and notice the new tone in its reply.</p>
+
+    <h2>3.4 Add a shoe finder</h2>
+    <p>Let's customize the agent to add a <strong>shoe finder</strong>: when a shopper wants footwear, the agent asks for their gender and size, shows the sizes as tappable pills, then searches only in that size — and if that turns up little, it broadens to similar products while staying in that size, never substituting another. This takes two edits — one to guide the search, one to build the pills.</p>
+
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <div>
+        <p><strong>Two terms used below:</strong></p>
+        <ul style="margin:.5rem 0 0; padding-left:1.2rem;">
+          <li style="margin-bottom:.4rem;"><strong>Pill</strong> — a small, rounded, tappable button (a &ldquo;chip&rdquo;) the agent shows under its message as a quick reply, so the shopper taps it instead of typing. You'll see real pills when you test at the end of this step (and on the welcome screen from Step 2.3).</li>
+          <li><strong>Ladder</strong> — the full, ordered list of sizes for one group (e.g. the women's ladder runs 5 → 11). &ldquo;Rendering the ladder&rdquo; means turning every rung into its own pill so the shopper taps their size rather than typing it.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <span class="ico">⚠️</span>
+      <p>Keep each rule string under <strong>255 characters</strong>. Agent Builder rejects the commit if any single variable value string exceeds that limit — and <code>sf agent validate</code> won't catch it.</p>
+    </div>
+
+    <h3>a) Guide the search — <code>tool_calling_guidance</code></h3>
+    <p>Add these rules to the <code>tool_calling_guidance</code> list so the agent asks for gender and size, then searches in that size:</p>
+    <div class="code-card">
+      <div class="code-card-head"><span><span class="dot">●</span> tool_calling_guidance</span><button class="copy-btn">Copy</button></div>
+      <pre>"SHOE PREREQUISITE: If the product is footwear, both GENDER and SIZE are required before searching. Ask for GENDER FIRST; do not ask for size until gender is known, so you can show the correct size ladder.",
+        "SIZE SEARCHING: Pass the size via refinementConstraints as c_size (e.g., c_size=10.5). Do NOT pass c_gender — the userQuery handles gender.",
+        "SAME-SIZE SEARCH: Once the shopper gives a shoe size, include that c_size on every FOOTWEAR search for the rest of the session. Never run a footwear search that drops c_size. Do NOT apply c_size to apparel — clothing uses letter sizes (S/M/L).",
+        "SAME-SIZE SIMILAR FALLBACK: If the exact query returns few/no results in that size, broaden the userQuery to SIMILAR products (same category/brand/style) while KEEPING c_size. Only show products available in that size; never substitute other sizes."</pre>
+    </div>
+    <figure>
+      <img src="images/section-3/shoe-01-tool-calling.png" alt="Agent Builder Variables view showing the tool_calling_guidance list with the SHOE PREREQUISITE, SIZE SEARCHING, and SAME-SIZE SEARCH rules" />
+    </figure>
+    <div class="callout info">
+      <span class="ico">ℹ️</span>
+      <p><strong>Why <code>c_size</code>?</strong> In B2C Commerce, the <code>c_</code> prefix marks a <strong>custom attribute</strong> — one the retailer defined on their catalog, as opposed to a Salesforce standard field. NTO stores shoe size in a custom attribute named <code>size</code>, so at the API it's <code>c_size</code>. The name must match the attribute's ID in <em>your</em> catalog <strong>exactly</strong> — on another storefront it might be <code>c_shoeSize</code> or similar, so check your catalog's attribute definitions before reusing this rule. (Standard attributes like <code>price</code> or <code>brand</code> have no <code>c_</code> prefix.)</p>
+    </div>
+
+    <h3>b) Build the size pills — <code>response_guidance</code></h3>
+    <p>Add these rules to the <code>response_guidance</code> list. Each size in a ladder becomes one tappable pill. (Sizes verified available in the NTO catalog.)</p>
+    <div class="code-card">
+      <div class="code-card-head"><span><span class="dot">●</span> response_guidance</span><button class="copy-btn">Copy</button></div>
+      <pre>"SHOPPER'S VOICE: Phrase every pill in the shopper's own words (e.g. 'Show me black ones', 'Under $150'). Never phrase a pill as an instruction ('Type your size', 'Select a color').",
+        "CLARIFYING TURNS: If a required piece is unknown, ask ONE clarifying question and offer a suggestions block of ONLY answer pills for that question. Show no product carousel and no unrelated pills on this turn.",
+        "GENDER PILLS: When asking who the shoes are for, output ONLY these three pills: Men's, Women's, Kids.",
+        "SIZE LADDER PILLS: When asking for shoe size, you MUST output the exact array of pills specified below for the demographic. Do not skip, sample, or generate your own ranges.",
+        "DIFFERENT-SIZE PILL (MANDATORY): The final pill MUST ALWAYS be the different-size phrase, on EVERY size-question turn, no exceptions. Even if you shorten the size list, this pill is required and must never be dropped.",
+        "DIFFERENT-SIZE PILL (SUBJECT): Match who they're shopping for. For themselves: 'I wear a different size'. For someone else: 'He wears a different size' / 'She wears a different size' / 'They wear a different size'.",
+        "DIFFERENT-SIZE PILL (PHRASING): Do NOT phrase it as an instruction like 'Type a different size'. Keep it in the shopper's voice for whoever they're buying for.",
+        "WOMENS LADDER: Output EXACTLY: Size 5, Size 5.5, Size 6, Size 6.5, Size 7, Size 7.5, Size 8, Size 8.5, Size 9, Size 9.5, Size 10, Size 10.5, Size 11, then the different-size pill (see SUBJECT rule).",
+        "MENS LADDER: Output EXACTLY: Size 7, Size 7.5, Size 8, Size 8.5, Size 9, Size 9.5, Size 10, Size 10.5, Size 11, Size 11.5, Size 12, Size 12.5, Size 13, then the different-size pill (see SUBJECT rule).",
+        "KIDS LADDER: Output EXACTLY: Size 1, Size 1.5, Size 2, Size 2.5, Size 3, Size 3.5, Size 4, Size 4.5, Size 5, Size 5.5, Size 6, Size 7, Size 8, Size 9, Size 10, Size 11, Size 12, Size 13, then the different-size pill (see SUBJECT rule)."</pre>
+    </div>
+    <figure>
+      <img src="images/section-3/shoe-02-response-guidance.png" alt="Agent Builder Variables view showing the response_guidance list with the SHOPPER'S VOICE, GENDER PILLS, SIZE LADDER, and WOMENS/MENS/KIDS LADDER rules, and the 255-character warning comment" />
+    </figure>
+
+    <h3>Publish your changes</h3>
+    <p>Once both edits are in, publish them exactly as in Step 3.2: <strong>create a new version</strong> (if you're editing an active one), then <strong>Save &rarr; Commit &rarr; Activate</strong> — and <strong>Clear chat</strong> in your demo app to reload the session with the new agent version.</p>
+
+    <h3>Test your shoe finder</h3>
+    <p>Ask <strong>&ldquo;show me running shoes&rdquo;</strong>. The agent should ask for gender, then size (as a row of pills), and after you pick one, show shoes available in that size.</p>
+    <a class="backtop" href="#top">↑ Back to contents</a>
+  </section>
+
+
+</div>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var pre = btn.closest('.code-card').querySelector('pre');
+      navigator.clipboard.writeText(pre.innerText).then(function () {
+        var old = btn.textContent;
+        btn.textContent = 'Copied ✓';
+        btn.classList.add('copied');
+        setTimeout(function () { btn.textContent = old; btn.classList.remove('copied'); }, 1500);
+      });
+    });
+  });
+
+  // Org tabs — switch the active form-values panel (scoped per .org-selector)
+  document.querySelectorAll('.org-selector').forEach(function (selector) {
+    var tabs = selector.querySelectorAll('.org-tab');
+    var panels = selector.querySelectorAll('.org-panel');
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var org = tab.getAttribute('data-org');
+        tabs.forEach(function (t) { t.classList.toggle('active', t === tab); });
+        panels.forEach(function (p) { p.classList.toggle('hidden', p.getAttribute('data-org') !== org); });
+      });
+    });
+  });
+
+  // Per-field copy — copy a single form value to the clipboard
+  document.querySelectorAll('.rcopy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var v = btn.closest('.valwrap').querySelector('.v');
+      navigator.clipboard.writeText(v.innerText).then(function () {
+        var old = btn.textContent;
+        btn.textContent = 'Copied ✓';
+        btn.classList.add('copied');
+        setTimeout(function () { btn.textContent = old; btn.classList.remove('copied'); }, 1500);
+      });
+    });
+  });
+</script>
+</body>
+</html>
