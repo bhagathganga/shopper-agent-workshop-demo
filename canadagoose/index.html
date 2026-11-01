@@ -123,7 +123,8 @@
         "data-show-fab": "true",
         "data-is-pdp": "false",
         "data-scrt2-url": P.scrt2 || "https://canadagoose--uat.sandbox.my.salesforce-scrt.com",
-        "data-org-id": P.org || "00DRu00000G523OMAR",
+        // 15-char org id: the SSE stream 400s unless X-Org-Id matches the token's (15-char) org id
+        "data-org-id": P.org || "00DRu00000G523O",
         "data-es-developer-name": P.es || "Canada_Goose_Shopper_Agent_CC_ES",
         "data-capabilities-version": P.capv || "65",
         "data-enable-page-context": "false",
