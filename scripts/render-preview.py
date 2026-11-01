@@ -25,6 +25,17 @@ env.add_filter("json", lambda v: json.dumps(v))
 env.add_filter("asset_url", lambda v: "assets/" + v)
 env.add_filter("stylesheet_tag", lambda v: '<link rel="stylesheet" href="%s" media="all">' % v)
 env.add_filter("url_encode", lambda v: quote(str(v), safe=""))
+LOCALES = {lang: json.load(open(os.path.join(EXT, "locales", f)))
+           for lang, f in (("en", "en.default.json"), ("fr", "fr.json"))}
+current = {"lang": "en"}
+def t(key):
+    node = LOCALES[current["lang"]]
+    for part in key.split("."):
+        node = node[part]
+    return node
+env.add_filter("t", t)
+# The contact-menu link targets are store-specific; placeholders keep every option visible in the preview.
+PREVIEW_SETTINGS = {"text_url": "#", "whatsapp_url": "#", "facebook_url": "#", "call_url": "#"}
 tpl = env.from_string(body_tpl)
 
 CA = {"country": {"iso_code": "CA", "currency": {"iso_code": "CAD"}}}
@@ -68,7 +79,7 @@ SHELL = """<!doctype html>
 <main>
   <h2>Shopify app embed preview</h2>
   <p>This page is <code>blocks/shopper_agent.liquid</code> rendered with mock Shopify objects for:
-     <b>{label}</b>. Assets are the ones the app ships.</p>
+     <b>{label}</b>. Assets are the ones the app ships. Text us / WhatsApp / Facebook / Call us are placeholder links here.</p>
   <nav>{nav}</nav>
   <p><button id="new-chat">Start a new chat</button>
      <small>Pre-chat values only apply to a new conversation, so start one after switching scenarios.</small></p>
@@ -93,7 +104,8 @@ SHELL = """<!doctype html>
 os.makedirs(out, exist_ok=True)
 shutil.copytree(os.path.join(EXT, "assets"), os.path.join(out, "assets"), dirs_exist_ok=True)
 for slug, label, over, settings_over in pages:
-    ctx = dict(base, **over, block={"settings": dict(defaults, **settings_over)})
+    current["lang"] = "fr" if slug == "fr-ca" else "en"
+    ctx = dict(base, **over, block={"settings": dict(defaults, **PREVIEW_SETTINGS, **settings_over)})
     embed = tpl.render(**ctx).strip()
     routing = re.search(r'data-routing-attributes="([^"]*)"', embed).group(1)
     routing = json.dumps(json.loads(html.unescape(routing)), indent=2)

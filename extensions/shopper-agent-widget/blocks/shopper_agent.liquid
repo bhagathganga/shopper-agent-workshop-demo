@@ -53,6 +53,10 @@
   assign font = block.settings.font_family
 
   assign logo_url = block.settings.logo_url | default: '' | strip
+  assign use_menu = false
+  if block.settings.launcher_style == 'contact_menu'
+    assign use_menu = true
+  endif
   if logo_url == blank
     assign logo_url = 'commerce-client-icon.svg' | asset_url
   endif
@@ -96,7 +100,7 @@
     data-position="{{ block.settings.position | escape }}"
     data-dialog-full-height="true"
     data-page-push="{{ block.settings.page_push }}"
-    data-show-fab="true"
+    data-show-fab="{% if use_menu %}false{% else %}true{% endif %}"
     data-is-pdp="{{ is_pdp }}"
     data-pdp-product-id="{{ pdp_id | escape }}"
     data-scrt2-url="{{ scrt2_url | escape }}"
@@ -116,6 +120,71 @@
   ></div>
 
   <script src="{{ 'cimulate-init.js' | asset_url }}" defer></script>
+  {%- if use_menu -%}
+    {%- liquid
+      assign text_url = block.settings.text_url | default: '' | strip
+      assign whatsapp_url = block.settings.whatsapp_url | default: '' | strip
+      assign facebook_url = block.settings.facebook_url | default: '' | strip
+      assign call_url = block.settings.call_url | default: '' | strip
+      assign new_tab = 'contact_menu.new_tab' | t
+    -%}
+    {%- capture chevron -%}<svg class="cg-contact-chevron" viewBox="0 0 8 8" aria-hidden="true"><path d="M2 0l4 4-4 4z" fill="currentColor"/></svg>{%- endcapture -%}
+    {{ 'cg-contact-menu.css' | asset_url | stylesheet_tag }}
+    <div id="cg-contact">
+      <button type="button" class="cg-contact-launcher" aria-haspopup="dialog" aria-expanded="false" aria-controls="cg-contact-menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h18v13H8l-5 4z"/></svg>
+        {{ 'contact_menu.launcher' | t }}
+      </button>
+      <div id="cg-contact-menu" class="cg-contact-menu" role="dialog" aria-labelledby="cg-contact-title" hidden>
+        <div class="cg-contact-head">
+          <h2 id="cg-contact-title" class="cg-contact-title">{{ 'contact_menu.title' | t }}</h2>
+          <button type="button" class="cg-contact-minimize" aria-label="{{ 'contact_menu.minimize' | t | escape }}">&#8212;</button>
+        </div>
+        <p class="cg-contact-welcome">{{ 'contact_menu.welcome' | t }}</p>
+        <ul class="cg-contact-list">
+          <li>
+            <button type="button" class="cg-contact-option" data-cg-action="chat">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h18v13H8l-5 4z"/></svg>
+              <span class="cg-contact-label">{{ 'contact_menu.chat' | t }}</span>{{ chevron }}
+            </button>
+          </li>
+          {%- if text_url != blank -%}
+            <li>
+              <a class="cg-contact-option" href="{{ text_url | escape }}">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14"/><path d="M3 6l9 7 9-7"/></svg>
+                <span class="cg-contact-label">{{ 'contact_menu.text' | t }}</span>{{ chevron }}
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if whatsapp_url != blank -%}
+            <li>
+              <a class="cg-contact-option" href="{{ whatsapp_url | escape }}" target="_blank" rel="noopener" aria-label="{{ 'contact_menu.whatsapp' | t | escape }}, {{ new_tab | escape }}">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 20l1.2-3.6A8.5 8.5 0 1 1 8 19z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.5-2-1-1 .8a4.5 4.5 0 0 1-2.3-2.3l.8-1-1-2z"/></svg>
+                <span class="cg-contact-label">{{ 'contact_menu.whatsapp' | t }}</span>{{ chevron }}
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if facebook_url != blank -%}
+            <li>
+              <a class="cg-contact-option" href="{{ facebook_url | escape }}" target="_blank" rel="noopener" aria-label="{{ 'contact_menu.facebook' | t | escape }}, {{ new_tab | escape }}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.5 2 2 6.1 2 11.3c0 2.9 1.4 5.5 3.7 7.2V22l3.4-1.9c.9.3 1.9.4 2.9.4 5.5 0 10-4.1 10-9.2S17.5 2 12 2zm1 12.4l-2.6-2.7-5 2.7 5.5-5.8 2.6 2.7 5-2.7z"/></svg>
+                <span class="cg-contact-label">{{ 'contact_menu.facebook' | t }}</span>{{ chevron }}
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if call_url != blank -%}
+            <li>
+              <a class="cg-contact-option" href="{{ call_url | escape }}">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg>
+                <span class="cg-contact-label">{{ 'contact_menu.call' | t }}</span>{{ chevron }}
+              </a>
+            </li>
+          {%- endif -%}
+        </ul>
+      </div>
+    </div>
+    <script src="{{ 'cg-contact-menu.js' | asset_url }}" defer></script>
+  {%- endif -%}
 {%- endif -%}
 
 {% schema %}
@@ -154,6 +223,41 @@
       "id": "capabilities_version",
       "label": "Capabilities version",
       "default": "65"
+    },
+    { "type": "header", "content": "Launcher" },
+    {
+      "type": "select",
+      "id": "launcher_style",
+      "label": "Chat launcher",
+      "options": [
+        { "value": "contact_menu", "label": "Customer Support menu (canadagoose.com)" },
+        { "value": "widget_button", "label": "Widget chat button" }
+      ],
+      "default": "contact_menu"
+    },
+    {
+      "type": "text",
+      "id": "text_url",
+      "label": "Text us link",
+      "info": "e.g. sms:+1... Leave blank to hide the option."
+    },
+    {
+      "type": "url",
+      "id": "whatsapp_url",
+      "label": "WhatsApp link",
+      "info": "Leave blank to hide the option."
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook Messenger link",
+      "info": "Leave blank to hide the option."
+    },
+    {
+      "type": "text",
+      "id": "call_url",
+      "label": "Call us link",
+      "info": "e.g. tel:+1... or a contact page URL. Leave blank to hide the option."
     },
     { "type": "header", "content": "Behavior" },
     {
