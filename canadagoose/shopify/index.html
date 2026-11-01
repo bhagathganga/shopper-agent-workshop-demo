@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canada Goose · Shopify app embed preview</title>
+<style>
+  body { margin: 0; font-family: Arial, sans-serif; color: #181818; background: #f6f6f4; }
+  header { background: #000; color: #fff; padding: 18px 24px; letter-spacing: .2em; font-weight: 700; }
+  main { max-width: 860px; margin: 32px auto; padding: 0 24px; line-height: 1.5; }
+  nav a { display: inline-block; margin: 0 8px 8px 0; padding: 6px 12px; border: 1px solid #181818;
+          color: #181818; text-decoration: none; font-size: 14px; }
+  nav a.on { background: #181818; color: #fff; }
+  pre { background: #fff; border: 1px solid #ddd; padding: 12px; overflow: auto; font-size: 12px; }
+  button { padding: 8px 14px; border: 0; background: #181818; color: #fff; cursor: pointer; }
+  small { color: #666; }
+</style>
+</head>
+<body>
+<header>CANADA GOOSE</header>
+<main>
+  <h2>Shopify app embed preview</h2>
+  <p>This page is <code>blocks/shopper_agent.liquid</code> rendered with mock Shopify objects for:
+     <b>Guest · en_CA · CAD</b>. Assets are the ones the app ships.</p>
+  <nav><a href="index.html" class="on">Guest · en_CA · CAD</a><a href="fr-ca.html">Invité · fr_CA · CAD</a><a href="us-customer.html">Signed-in customer · en_US · USD</a><a href="pdp.html">Product page (handle sent as page context) · en_CA</a></nav>
+  <p><button id="new-chat">Start a new chat</button>
+     <small>Pre-chat values only apply to a new conversation, so start one after switching scenarios.</small></p>
+  <h3>data-routing-attributes</h3>
+  <pre>{
+  &quot;Language&quot;: &quot;en&quot;,
+  &quot;CountryCode&quot;: &quot;CA&quot;,
+  &quot;Locale&quot;: &quot;en_CA&quot;,
+  &quot;Currency&quot;: &quot;CAD&quot;,
+  &quot;ClientVersion&quot;: &quot;1.50.4&quot;,
+  &quot;isCartMgmtSupported&quot;: &quot;false&quot;,
+  &quot;Consent_Checkbox&quot;: &quot;No&quot;
+}</pre>
+  <p><small>App commit 4b2f222 · assets synced from plugin_commerce_client 05dd829 2026-10-30, widget 1.50.4</small></p>
+</main>
+<script>
+  document.getElementById('new-chat').onclick = function () {
+    [sessionStorage, localStorage].forEach(function (s) {
+      Object.keys(s).forEach(function (k) { if (/cim|miaw|scrt|convers|messag|cc_/i.test(k)) s.removeItem(k); });
+    });
+    location.reload();
+  };
+</script>
+<!-- ===== app embed output (target: body) ===== -->
+<link rel="stylesheet" href="assets/commerceClient.css" media="all">
+  <script src="https://cdn.search.cimulate.ai/copilot-widget/1.50.4/messaging.umd.js" defer></script>
+
+  <div
+    id="cimulate-messaging-widget"
+    data-preset="standard"
+    data-is-dev="false"
+    data-is-open="false"
+    data-position="bottom-right"
+    data-dialog-full-height="true"
+    data-page-push="false"
+    data-show-fab="true"
+    data-is-pdp="false"
+    data-pdp-product-id=""
+    data-scrt2-url="https://canadagoose--uat.sandbox.my.salesforce-scrt.com"
+    data-org-id="00DRu00000G523O"
+    data-es-developer-name="Canada_Goose_Shopper_Agent_CC_ES"
+    data-capabilities-version="65"
+    data-enable-page-context="false"
+    data-enable-image-upload="false"
+    data-enable-escalation="true"
+    data-progress-steps-limit="3"
+    data-conversation-history-limit="200"
+    data-header-text="Canada Goose"
+    data-routing-attributes="{&quot;Language&quot;:&quot;en&quot;,&quot;CountryCode&quot;:&quot;CA&quot;,&quot;Locale&quot;:&quot;en_CA&quot;,  &quot;Currency&quot;:&quot;CAD&quot;,&quot;ClientVersion&quot;:&quot;1.50.4&quot;,&quot;isCartMgmtSupported&quot;:&quot;false&quot;,  &quot;Consent_Checkbox&quot;:&quot;No&quot;}"
+    data-theme="{&quot;primaryColor&quot;:&quot;#000000&quot;,&quot;fontColor&quot;:&quot;#181818&quot;,  &quot;backgroundColor&quot;:&quot;#ffffff&quot;,&quot;fontFamily&quot;:&quot;Arial, sans-serif&quot;}"
+    data-branding-config="{&quot;assistantName&quot;:&quot;Canada Goose&quot;,&quot;fabLabel&quot;:&quot;Chat with us&quot;,  &quot;theme&quot;:{&quot;primary&quot;:&quot;#000000&quot;,&quot;primaryForeground&quot;:&quot;#ffffff&quot;,  &quot;surface&quot;:&quot;#ffffff&quot;,&quot;text&quot;:&quot;#181818&quot;,  &quot;fontFamily&quot;:&quot;Arial, sans-serif&quot;}}"
+    data-header-config="{&quot;headerText&quot;:&quot;Canada Goose&quot;,&quot;logoUrl&quot;:&quot;assets/commerce-client-icon.svg&quot;,  &quot;headerBackgroundColor&quot;:&quot;#ffffff&quot;,&quot;headerTextColor&quot;:&quot;#181818&quot;,  &quot;headerTextFontWeight&quot;:400,&quot;headerTextFontFamily&quot;:&quot;Arial, sans-serif&quot;,&quot;headerTextTextAlign&quot;:&quot;left&quot;}"
+  ></div>
+
+  <script src="assets/cimulate-init.js" defer></script>
+</body>
+</html>
