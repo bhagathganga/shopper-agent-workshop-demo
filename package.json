@@ -1,0 +1,11 @@
+{
+  "name": "canadagoose-shopper-agent",
+  "private": true,
+  "scripts": {
+    "dev": "shopify app dev",
+    "deploy": "shopify app deploy",
+    "info": "shopify app info",
+    "sync": "./scripts/sync-from-cartridge.sh",
+    "check": "shopify theme check --path extensions/shopper-agent-widget -C theme-check:theme-app-extension"
+  }
+}
