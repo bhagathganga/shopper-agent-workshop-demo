@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Canada Goose — Shopper Agent test page</title>
+  <!-- vendor/ is refreshed from plugin_commerce_client by ./sync.sh -->
+  <link rel="stylesheet" href="vendor/commerceClient.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #181818; background: #fff; }
+    header.site-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 28px; border-bottom: 1px solid #e5e5e5; background: #fff; }
+    .wordmark { font-size: 20px; font-weight: 700; letter-spacing: 4px; }
+    nav a { margin-left: 22px; color: #181818; text-decoration: none; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+    .banner { background: #000; color: #fff; text-align: center; font-size: 12px; padding: 8px; letter-spacing: 1px; }
+    .hero { min-height: 46vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(180deg, #ececec, #d6d6d6); padding: 40px 20px; }
+    .hero h1 { font-size: 34px; letter-spacing: 3px; margin: 0 0 10px; }
+    .hero p { margin: 0; color: #555; }
+    main { max-width: 760px; margin: 32px auto 120px; padding: 0 20px; }
+    fieldset { border: 1px solid #ddd; border-radius: 6px; padding: 16px 18px 18px; }
+    legend { font-weight: 700; font-size: 14px; padding: 0 6px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+    label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+    input, select { width: 100%; padding: 8px 9px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+    .row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    button.btn { background: #000; color: #fff; border: 0; border-radius: 4px; padding: 10px 16px; font-size: 13px; cursor: pointer; }
+    button.btn.secondary { background: #eee; color: #000; }
+    .meta { font: 12px/1.5 ui-monospace, Menlo, monospace; color: #555; margin-top: 14px; white-space: pre-wrap; word-break: break-word; }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } nav { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="banner">TEST PAGE — Canada Goose Shopper Agent (UAT) via the Cimulate widget</div>
+  <header class="site-header">
+    <div class="wordmark">CANADA GOOSE</div>
+    <nav><a href="#">Women</a><a href="#">Men</a><a href="#">Kids</a><a href="#">Shoes</a></nav>
+  </header>
+  <section class="hero">
+    <div>
+      <h1>BUILT FOR THE COLD</h1>
+      <p>Open the chat button to talk to the shopper agent.</p>
+    </div>
+  </section>
+
+  <main>
+    <form id="prechat">
+      <fieldset>
+        <legend>Pre-chat fields (sent as routing attributes when a new conversation starts)</legend>
+        <div class="grid">
+          <div><label for="FirstName">First name</label><input id="FirstName" /></div>
+          <div><label for="LastName">Last name</label><input id="LastName" /></div>
+          <div><label for="Email">Email</label><input id="Email" type="email" /></div>
+          <div><label for="Phone_Number">Phone</label><input id="Phone_Number" /></div>
+          <div><label for="CountryCode">Country</label>
+            <select id="CountryCode"><option value="CA">CA</option><option value="US">US</option></select></div>
+          <div><label for="Language">Language</label>
+            <select id="Language"><option value="en">English</option><option value="fr">Français</option></select></div>
+          <div><label for="Consent_Checkbox">Marketing consent</label>
+            <select id="Consent_Checkbox"><option value="No">No</option><option value="Yes">Yes</option></select></div>
+        </div>
+        <div class="row">
+          <button class="btn" type="submit">Save &amp; start a new conversation</button>
+          <button class="btn secondary" type="button" id="clear">Clear fields</button>
+        </div>
+        <div class="meta" id="meta"></div>
+      </fieldset>
+    </form>
+  </main>
+
+  <!-- Same element + data-* contract that plugin_commerce_client's messagingWidgetBody.isml renders;
+       vendor/cimulate-init.js reads it. Values are filled in by the script below. -->
+  <div id="cimulate-messaging-widget"></div>
+
+  <script src="vendor/version.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      // ?key=val or #key=val (hash wins). Defaults = CG UAT.
+      //   scrt2= org= es=     connection          cdn=1.50.4   widget version (default: cartridge's)
+      //   escalation=0|1      human escalation (default 1)
+      //   position=bottom-left|bottom-right       open=1       start opened
+      //   preset=standard|commerce                dev=1        widget isDevelopment
+      var P = {};
+      [location.search, location.hash].forEach(function (s) {
+        s.replace(/^[?#]/, "").split("&").forEach(function (kv) {
+          if (!kv) return;
+          var i = kv.indexOf("="), k = (i < 0 ? kv : kv.slice(0, i)).toLowerCase();
+          P[k] = i < 0 ? "" : decodeURIComponent(kv.slice(i + 1).replace(/\+/g, " "));
+        });
+      });
+      function bool(k, d) { return k in P ? ["", "1", "true", "yes", "on"].indexOf(String(P[k]).toLowerCase()) !== -1 : d; }
+
+      var CDN = P.cdn || window.CC_CDN_VERSION;
+      var KEY = "cgShopperAgentTestPrechat";
+      var FIELDS = ["FirstName", "LastName", "Email", "Phone_Number", "CountryCode", "Language", "Consent_Checkbox"];
+      var $ = function (id) { return document.getElementById(id); };
+
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+      FIELDS.forEach(function (f) { if (saved[f]) $(f).value = saved[f]; });
+
+      // Pre-chat contract declared on Canada_Goose_Shopper_Agent_CC_ES. Empty values are dropped.
+      // Locale/Currency are derived the way the storefront would; ClientVersion = widget version
+      // (the cartridge also sends it, as clientVersion). No cart on this page, so cart mgmt is off.
+      var country = $("CountryCode").value, lang = $("Language").value;
+      var routing = {
+        Locale: lang + "_" + country,
+        Currency: country === "CA" ? "CAD" : "USD",
+        ClientVersion: CDN,
+        isCartMgmtSupported: "false"
+      };
+      FIELDS.forEach(function (f) { if ($(f).value.trim()) routing[f] = $(f).value.trim(); });
+
+      var fab = lang === "fr" ? "Clavarder avec nous" : "Chat with us";
+      var attrs = {
+        "data-preset": P.preset || "standard",
+        "data-is-dev": String(bool("dev", false)),
+        "data-is-open": String(bool("open", false)),
+        "data-position": P.position || "bottom-right",
+        "data-dialog-full-height": "true",
+        "data-page-push": "false",
+        "data-show-fab": "true",
+        "data-is-pdp": "false",
+        "data-scrt2-url": P.scrt2 || "https://canadagoose--uat.sandbox.my.salesforce-scrt.com",
+        "data-org-id": P.org || "00DRu00000G523OMAR",
+        "data-es-developer-name": P.es || "Canada_Goose_Shopper_Agent_CC_ES",
+        "data-capabilities-version": P.capv || "65",
+        "data-enable-page-context": "false",
+        "data-enable-image-upload": "false",
+        "data-enable-escalation": String(bool("escalation", true)),
+        "data-progress-steps-limit": "3",
+        "data-conversation-history-limit": "200",
+        "data-header-text": "Canada Goose",
+        "data-routing-attributes": JSON.stringify(routing),
+        "data-theme": JSON.stringify({ primaryColor: "#000000", fontColor: "#181818", backgroundColor: "#ffffff", fontFamily: "Arial, sans-serif" }),
+        "data-branding-config": JSON.stringify({ assistantName: "Canada Goose", fabLabel: fab,
+          theme: { primary: "#000000", primaryForeground: "#ffffff", surface: "#ffffff", text: "#181818", fontFamily: "Arial, sans-serif" } }),
+        "data-header-config": JSON.stringify({ headerText: "Canada Goose", logoUrl: "vendor/commerce-client-icon.svg",
+          headerBackgroundColor: "#FFFFFF", headerTextColor: "#181818", headerTextFontWeight: 400,
+          headerTextFontFamily: "Arial, sans-serif", headerTextTextAlign: "left" })
+      };
+      var el = $("cimulate-messaging-widget");
+      Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+
+      $("meta").textContent = "widget " + CDN + " · " + window.CC_SOURCE + "\n" +
+        attrs["data-es-developer-name"] + " · escalation " + attrs["data-enable-escalation"] + "\n" +
+        "routingAttributes " + JSON.stringify(routing);
+
+      // Routing attributes only apply when a conversation is created, so saving drops the
+      // widget's stored conversation (sessionStorage + its localStorage keys) and reloads.
+      function restart() {
+        try {
+          sessionStorage.clear();
+          Object.keys(localStorage).forEach(function (k) { if (k !== KEY && /cim|miaw|scrt|convers|messag|cc_/i.test(k)) localStorage.removeItem(k); });
+        } catch (e) {}
+        location.reload();
+      }
+      $("prechat").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var v = {};
+        FIELDS.forEach(function (f) { v[f] = $(f).value.trim(); });
+        localStorage.setItem(KEY, JSON.stringify(v));
+        restart();
+      });
+      $("clear").addEventListener("click", function () { localStorage.removeItem(KEY); restart(); });
+
+      // Load order mirrors the cartridge: widget bundle first, then cimulate-init.js
+      // (which initializes immediately once the document has finished loading).
+      var b = document.createElement("script");
+      b.src = "https://cdn.search.cimulate.ai/copilot-widget/" + CDN + "/messaging.umd.js";
+      b.onload = function () {
+        var s = document.createElement("script");
+        s.src = "vendor/cimulate-init.js";
+        document.body.appendChild(s);
+      };
+      b.onerror = function () { $("meta").textContent += "\nERROR: could not load " + b.src; };
+      document.head.appendChild(b);
+    })();
+  </script>
+</body>
+</html>
