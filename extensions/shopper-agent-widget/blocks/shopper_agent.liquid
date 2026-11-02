@@ -132,8 +132,8 @@
     {{ 'cg-contact-menu.css' | asset_url | stylesheet_tag }}
     <div id="cg-contact">
       <button type="button" class="cg-contact-launcher" aria-haspopup="dialog" aria-expanded="false" aria-controls="cg-contact-menu">
-        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h18v13H8l-5 4z"/></svg>
-        {{ 'contact_menu.launcher' | t }}
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M4.5 5.5a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9.5l-5 4z"/></svg>
+        <span class="cg-contact-sr">{{ 'contact_menu.launcher' | t }}</span>
       </button>
       <div id="cg-contact-menu" class="cg-contact-menu" role="dialog" aria-labelledby="cg-contact-title" hidden>
         <div class="cg-contact-head">
