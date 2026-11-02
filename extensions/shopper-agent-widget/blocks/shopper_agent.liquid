@@ -90,6 +90,8 @@
 
 {%- if scrt2_url != blank and org_id != blank and es_name != blank -%}
   {{ 'commerceClient.css' | asset_url | stylesheet_tag }}
+  {%- comment -%} The widget's header icons draw with currentColor on a transparent background, so a theme's global button colour can hide them. {%- endcomment -%}
+  <style>.cim-widget-close-button:not(.clear-attachment) { color: {{ c_text }}; }</style>
   <script src="https://cdn.search.cimulate.ai/copilot-widget/{{ cdn | url_encode }}/messaging.umd.js" defer></script>
 
   <div
