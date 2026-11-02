@@ -69,7 +69,9 @@ SHELL = """<!doctype html>
   nav a {{ display: inline-block; margin: 0 8px 8px 0; padding: 6px 12px; border: 1px solid #181818;
           color: #181818; text-decoration: none; font-size: 14px; }}
   nav a.on {{ background: #181818; color: #fff; }}
-  pre {{ background: #fff; border: 1px solid #ddd; padding: 12px; overflow: auto; font-size: 12px; }}
+  textarea {{ box-sizing: border-box; width: 100%; height: 260px; background: #fff; border: 1px solid #ddd;
+             padding: 12px; font: 12px/1.5 Menlo, Consolas, monospace; }}
+  #routing-error {{ color: #b00020; }}
   button {{ padding: 8px 14px; border: 0; background: #181818; color: #fff; cursor: pointer; }}
   small {{ color: #666; }}
 </style>
@@ -83,20 +85,49 @@ SHELL = """<!doctype html>
   <nav>{nav}</nav>
   <p><button id="new-chat">Start a new chat</button>
      <small>Pre-chat values only apply to a new conversation, so start one after switching scenarios.</small></p>
-  <h3>data-routing-attributes</h3>
-  <pre>{routing}</pre>
+  <h3>Pre-chat routing attributes</h3>
+  <p><small>Edit the JSON, then apply: it replaces this page's data-routing-attributes and starts a new chat.
+     Saved in this browser per scenario.</small></p>
+  <textarea id="routing" spellcheck="false" aria-label="Pre-chat routing attributes (JSON)">{routing}</textarea>
+  <p><button id="routing-apply">Apply and start a new chat</button>
+     <button id="routing-reset">Reset to scenario defaults</button>
+     <small id="routing-error" role="alert"></small></p>
   <p><small>App commit {commit} · assets synced from {synced}</small></p>
 </main>
 <script>
-  document.getElementById('new-chat').onclick = function () {{
+  var ROUTING_KEY = 'cgprev-routing-{slug}';
+  function newChat() {{
     [sessionStorage, localStorage].forEach(function (s) {{
       Object.keys(s).forEach(function (k) {{ if (/cim|miaw|scrt|convers|messag|cc_/i.test(k)) s.removeItem(k); }});
     }});
     location.reload();
+  }}
+  document.getElementById('new-chat').onclick = newChat;
+  document.getElementById('routing-apply').onclick = function () {{
+    var box = document.getElementById('routing'), err = document.getElementById('routing-error');
+    try {{
+      var v = JSON.parse(box.value);
+      if (!v || typeof v !== 'object' || Array.isArray(v)) throw new Error('must be a JSON object');
+      localStorage.setItem(ROUTING_KEY, JSON.stringify(v));
+      newChat();
+    }} catch (e) {{ err.textContent = 'Invalid JSON: ' + e.message; }}
+  }};
+  document.getElementById('routing-reset').onclick = function () {{
+    localStorage.removeItem(ROUTING_KEY);
+    newChat();
   }};
 </script>
 <!-- ===== app embed output (target: body) ===== -->
 {embed}
+<script>
+  // Runs before the deferred widget scripts, so a saved override is what the widget reads.
+  (function () {{
+    var saved = localStorage.getItem(ROUTING_KEY), el = document.getElementById('cimulate-messaging-widget');
+    if (!saved || !el) return;
+    el.setAttribute('data-routing-attributes', saved);
+    document.getElementById('routing').value = JSON.stringify(JSON.parse(saved), null, 2);
+  }})();
+</script>
 </body>
 </html>
 """
@@ -113,6 +144,6 @@ for slug, label, over, settings_over in pages:
                   for s, l, _, _ in pages)
     lang = "fr" if slug == "fr-ca" else "en"
     with open(os.path.join(out, slug + ".html"), "w") as f:
-        f.write(SHELL.format(lang=lang, label=html.escape(label), nav=nav, routing=html.escape(routing),
+        f.write(SHELL.format(slug=slug, lang=lang, label=html.escape(label), nav=nav, routing=html.escape(routing),
                              commit=commit, synced=html.escape(synced), embed=embed))
 print("wrote", ", ".join(s + ".html" for s, *_ in pages), "+ assets/ to", out)
