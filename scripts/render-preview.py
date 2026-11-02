@@ -34,8 +34,8 @@ def t(key):
         node = node[part]
     return node
 env.add_filter("t", t)
-# The contact-menu link targets are store-specific; placeholders keep every option visible in the preview.
-PREVIEW_SETTINGS = {"text_url": "#", "whatsapp_url": "#", "facebook_url": "#", "call_url": "#"}
+# Contact-menu links without a real default get placeholders so every option stays visible in the preview.
+PREVIEW_SETTINGS = {k: "#" for k in ("text_url", "whatsapp_url", "facebook_url", "call_url") if not defaults.get(k)}
 tpl = env.from_string(body_tpl)
 
 CA = {"country": {"iso_code": "CA", "currency": {"iso_code": "CAD"}}}
@@ -79,7 +79,7 @@ SHELL = """<!doctype html>
 <main>
   <h2>Shopify app embed preview</h2>
   <p>This page is <code>blocks/shopper_agent.liquid</code> rendered with mock Shopify objects for:
-     <b>{label}</b>. Assets are the ones the app ships. Text us / WhatsApp / Facebook / Call us are placeholder links here.</p>
+     <b>{label}</b>. Assets are the ones the app ships.</p>
   <nav>{nav}</nav>
   <p><button id="new-chat">Start a new chat</button>
      <small>Pre-chat values only apply to a new conversation, so start one after switching scenarios.</small></p>
