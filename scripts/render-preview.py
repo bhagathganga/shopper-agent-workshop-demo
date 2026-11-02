@@ -72,7 +72,7 @@ SHELL = """<!doctype html>
   textarea {{ box-sizing: border-box; width: 100%; height: 260px; background: #fff; border: 1px solid #ddd;
              padding: 12px; font: 12px/1.5 Menlo, Consolas, monospace; }}
   #routing-error {{ color: #b00020; }}
-  button {{ padding: 8px 14px; border: 0; background: #181818; color: #fff; cursor: pointer; }}
+  main button {{ padding: 8px 14px; border: 0; background: #181818; color: #fff; cursor: pointer; }}
   small {{ color: #666; }}
 </style>
 </head>
