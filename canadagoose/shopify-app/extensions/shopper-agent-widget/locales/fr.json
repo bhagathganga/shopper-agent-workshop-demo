@@ -1,0 +1,14 @@
+{
+  "contact_menu": {
+    "launcher": "Clavardage",
+    "title": "Service à la clientèle",
+    "minimize": "Réduire le clavardage",
+    "welcome": "Bienvenue. Nous sommes disponibles pour répondre à vos questions.",
+    "chat": "Clavarder avec nous",
+    "text": "Textez-nous",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "call": "Appelez-nous",
+    "new_tab": "s'ouvre dans un nouvel onglet"
+  }
+}

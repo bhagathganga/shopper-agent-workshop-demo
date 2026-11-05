@@ -1,0 +1,14 @@
+{
+  "contact_menu": {
+    "launcher": "Chat",
+    "title": "Customer support",
+    "minimize": "Minimize chat",
+    "welcome": "Welcome. We're available to answer questions.",
+    "chat": "Chat with us",
+    "text": "Text us",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "call": "Call us",
+    "new_tab": "opens in a new tab"
+  }
+}
