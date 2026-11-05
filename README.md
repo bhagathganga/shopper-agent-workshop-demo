@@ -4,6 +4,11 @@ Extension-only Shopify app that puts the Agentforce shopper agent (Cimulate copi
 Embedded Service `Canada_Goose_Shopper_Agent_CC_ES`) on an Online Store 2.0 theme as an **app embed**.
 There is no app server: everything runs in the storefront.
 
+**Full documentation:** [`docs/index.html`](docs/index.html) covers the overview, pre-chat fields, every embed
+setting, deploy, CORS, gaps and how to work on the repo. Clone the repo and open it in a browser; GitHub shows the
+file as source. Live preview of the embed (mock Shopify objects, real UAT agent):
+https://bhagathganga.github.io/shopper-agent-workshop-demo/canadagoose/shopify/pdp.html
+
 It is a port of `plugin_commerce_client`'s SFCC integration:
 
 | SFCC cartridge                              | This app                                                   |
@@ -38,7 +43,20 @@ extensions/shopper-agent-widget/
   blocks/shopper_agent.liquid          app embed (target: body) + settings schema
   assets/                              cimulate-init.js, commerceClient.css, commerce-client-icon.svg
 scripts/sync-from-cartridge.sh         refresh assets + default widget version from plugin_commerce_client main
+scripts/render-preview.py              render the block to static preview pages with mock Shopify objects
+scripts/build-docs.py                  rebuild docs/index.html (`npm run docs`)
+docs/index.html                        project documentation page
 ```
+
+## Working on this repo
+
+- `main` is what gets deployed. Work on a branch (e.g. `cart-management`) and open a PR.
+- Never commit credentials: Shopify client secrets, Admin/Storefront tokens and `.env` files stay out of git.
+  `client_id` in `shopify.app.toml` is per-developer; link your own app with `shopify app config link` and
+  don't commit someone else's.
+- Don't hand-edit `assets/cimulate-init.js`, `commerceClient.css` or the icon; `npm run sync` overwrites them.
+  Put Shopify-only behaviour in the Liquid block or a separate asset (like `cg-contact-menu.js`).
+- After changing the block, run `npm run docs` (settings table is generated from the schema) and `npm run check`.
 
 ## Test on a Partner dev store
 
