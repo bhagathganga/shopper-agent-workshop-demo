@@ -83,10 +83,10 @@ extensions/shopper-agent-widget/
 <p>Static pages rendering <code>shopper_agent.liquid</code> with mock Shopify objects, connected to the real
 UAT agent. Each page has an editable pre-chat JSON box.</p>
 <p class="pills">
-  <a href="https://bhagathganga.github.io/shopper-agent-workshop-demo/canadagoose/shopify/index.html">Guest · en_CA · CAD</a>
-  <a href="https://bhagathganga.github.io/shopper-agent-workshop-demo/canadagoose/shopify/fr-ca.html">Invité · fr_CA · CAD</a>
-  <a href="https://bhagathganga.github.io/shopper-agent-workshop-demo/canadagoose/shopify/us-customer.html">Signed-in customer · en_US · USD</a>
-  <a href="https://bhagathganga.github.io/shopper-agent-workshop-demo/canadagoose/shopify/pdp.html">Product page · en_CA</a>
+  <a href="../../shopify/index.html">Guest · en_CA · CAD</a>
+  <a href="../../shopify/fr-ca.html">Invité · fr_CA · CAD</a>
+  <a href="../../shopify/us-customer.html">Signed-in customer · en_US · USD</a>
+  <a href="../../shopify/pdp.html">Product page · en_CA</a>
 </p>
 <p><small>The PDP preview turns on <i>Send the current product</i> with the handle as identifier
 (<code>data-pdp-product-id="expedition-parka"</code>). In the real embed that setting is off by default.</small></p>
@@ -216,6 +216,10 @@ For production, change the SCRT2 URL, org ID and ESD name in the embed settings;
 <section id="collab">
 <h2>Working on this repo</h2>
 <ul>
+  <li><b>Where:</b> <code>canadagoose/shopify-app/</code> in
+      <a href="https://github.com/bhagathganga/shopper-agent-workshop-demo">shopper-agent-workshop-demo</a>; run commands
+      from that folder. This page is served from <code>docs/</code> by GitHub Pages; the preview pages are
+      <code>canadagoose/shopify/</code> (rebuild with <code>scripts/render-preview.py ../shopify</code>).</li>
   <li><b>Branches:</b> <code>main</code> is what gets deployed. Work on a branch (e.g. <code>cart-management</code>)
       and open a PR. Keep commits small; say what changed in the storefront, not just the file.</li>
   <li><b>Never commit credentials.</b> Shopify client secrets, Admin/Storefront tokens and <code>.env</code> files stay
@@ -245,20 +249,20 @@ For production, change the SCRT2 URL, org ID and ESD name in the embed settings;
 <h2>Files</h2>
 <table>
 <tr><th>Path</th><th>Size</th></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/shopify.app.toml"><code>shopify.app.toml</code></a></td><td>501 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/package.json"><code>package.json</code></a></td><td>384 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/extensions/shopper-agent-widget/shopify.extension.toml"><code>extensions/shopper-agent-widget/shopify.extension.toml</code></a></td><td>45 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/extensions/shopper-agent-widget/blocks/shopper_agent.liquid"><code>extensions/shopper-agent-widget/blocks/shopper_agent.liquid</code></a></td><td>15,800 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/extensions/shopper-agent-widget/assets/cimulate-init.js"><code>extensions/shopper-agent-widget/assets/cimulate-init.js</code></a></td><td>26,207 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/extensions/shopper-agent-widget/assets/commerceClient.css"><code>extensions/shopper-agent-widget/assets/commerceClient.css</code></a></td><td>11,511 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/extensions/shopper-agent-widget/assets/cg-contact-menu.js"><code>extensions/shopper-agent-widget/assets/cg-contact-menu.js</code></a></td><td>1,711 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/extensions/shopper-agent-widget/assets/cg-contact-menu.css"><code>extensions/shopper-agent-widget/assets/cg-contact-menu.css</code></a></td><td>2,989 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/extensions/shopper-agent-widget/assets/commerce-client-icon.svg"><code>extensions/shopper-agent-widget/assets/commerce-client-icon.svg</code></a></td><td>1,483 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/extensions/shopper-agent-widget/locales/en.default.json"><code>extensions/shopper-agent-widget/locales/en.default.json</code></a></td><td>348 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/extensions/shopper-agent-widget/locales/fr.json"><code>extensions/shopper-agent-widget/locales/fr.json</code></a></td><td>420 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/scripts/sync-from-cartridge.sh"><code>scripts/sync-from-cartridge.sh</code></a></td><td>2,543 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/scripts/render-preview.py"><code>scripts/render-preview.py</code></a></td><td>7,848 B</td></tr>
-<tr><td><a href="https://github.com/bhagathganga/canadagoose-shopify-app/blob/main/scripts/build-docs.py"><code>scripts/build-docs.py</code></a></td><td>16,269 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/shopify.app.toml"><code>shopify.app.toml</code></a></td><td>501 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/package.json"><code>package.json</code></a></td><td>384 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/extensions/shopper-agent-widget/shopify.extension.toml"><code>extensions/shopper-agent-widget/shopify.extension.toml</code></a></td><td>45 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/extensions/shopper-agent-widget/blocks/shopper_agent.liquid"><code>extensions/shopper-agent-widget/blocks/shopper_agent.liquid</code></a></td><td>15,800 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/extensions/shopper-agent-widget/assets/cimulate-init.js"><code>extensions/shopper-agent-widget/assets/cimulate-init.js</code></a></td><td>26,207 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/extensions/shopper-agent-widget/assets/commerceClient.css"><code>extensions/shopper-agent-widget/assets/commerceClient.css</code></a></td><td>11,511 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/extensions/shopper-agent-widget/assets/cg-contact-menu.js"><code>extensions/shopper-agent-widget/assets/cg-contact-menu.js</code></a></td><td>1,711 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/extensions/shopper-agent-widget/assets/cg-contact-menu.css"><code>extensions/shopper-agent-widget/assets/cg-contact-menu.css</code></a></td><td>2,989 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/extensions/shopper-agent-widget/assets/commerce-client-icon.svg"><code>extensions/shopper-agent-widget/assets/commerce-client-icon.svg</code></a></td><td>1,483 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/extensions/shopper-agent-widget/locales/en.default.json"><code>extensions/shopper-agent-widget/locales/en.default.json</code></a></td><td>348 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/extensions/shopper-agent-widget/locales/fr.json"><code>extensions/shopper-agent-widget/locales/fr.json</code></a></td><td>420 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/scripts/sync-from-cartridge.sh"><code>scripts/sync-from-cartridge.sh</code></a></td><td>2,543 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/scripts/render-preview.py"><code>scripts/render-preview.py</code></a></td><td>7,848 B</td></tr>
+<tr><td><a href="https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app/scripts/build-docs.py"><code>scripts/build-docs.py</code></a></td><td>16,737 B</td></tr>
 </table>
 </section>
 </main>

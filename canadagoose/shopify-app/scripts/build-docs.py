@@ -8,8 +8,9 @@ import html, json, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "docs", "index.html")
 EXT = "extensions/shopper-agent-widget"
-REPO_URL = "https://github.com/bhagathganga/canadagoose-shopify-app"
-PREVIEW = "https://bhagathganga.github.io/shopper-agent-workshop-demo/canadagoose/shopify/"
+# Served by GitHub Pages at /canadagoose/shopify-app/docs/, so the preview pages are a relative hop away.
+SRC_URL = "https://github.com/bhagathganga/shopper-agent-workshop-demo/blob/main/canadagoose/shopify-app"
+PREVIEW = "../../shopify/"
 
 files = ["shopify.app.toml", "package.json", f"{EXT}/shopify.extension.toml", f"{EXT}/blocks/shopper_agent.liquid",
          f"{EXT}/assets/cimulate-init.js", f"{EXT}/assets/commerceClient.css", f"{EXT}/assets/cg-contact-menu.js",
@@ -44,7 +45,7 @@ def settings_rows():
 
 
 def file_rows():
-    return "\n".join(f'<tr><td><a href="{REPO_URL}/blob/main/{e(f)}"><code>{e(f)}</code></a></td>'
+    return "\n".join(f'<tr><td><a href="{SRC_URL}/{e(f)}"><code>{e(f)}</code></a></td>'
                      f'<td>{len(src[f].encode()):,} B</td></tr>' for f in files)
 
 
@@ -235,6 +236,10 @@ For production, change the SCRT2 URL, org ID and ESD name in the embed settings;
 <section id="collab">
 <h2>Working on this repo</h2>
 <ul>
+  <li><b>Where:</b> <code>canadagoose/shopify-app/</code> in
+      <a href="https://github.com/bhagathganga/shopper-agent-workshop-demo">shopper-agent-workshop-demo</a>; run commands
+      from that folder. This page is served from <code>docs/</code> by GitHub Pages; the preview pages are
+      <code>canadagoose/shopify/</code> (rebuild with <code>scripts/render-preview.py ../shopify</code>).</li>
   <li><b>Branches:</b> <code>main</code> is what gets deployed. Work on a branch (e.g. <code>cart-management</code>)
       and open a PR. Keep commits small; say what changed in the storefront, not just the file.</li>
   <li><b>Never commit credentials.</b> Shopify client secrets, Admin/Storefront tokens and <code>.env</code> files stay

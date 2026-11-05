@@ -4,10 +4,13 @@ Extension-only Shopify app that puts the Agentforce shopper agent (Cimulate copi
 Embedded Service `Canada_Goose_Shopper_Agent_CC_ES`) on an Online Store 2.0 theme as an **app embed**.
 There is no app server: everything runs in the storefront.
 
-**Full documentation:** [`docs/index.html`](docs/index.html) covers the overview, pre-chat fields, every embed
-setting, deploy, CORS, gaps and how to work on the repo. Clone the repo and open it in a browser; GitHub shows the
-file as source. Live preview of the embed (mock Shopify objects, real UAT agent):
+**Full documentation:** https://bhagathganga.github.io/shopper-agent-workshop-demo/canadagoose/shopify-app/docs/
+(source: [`docs/index.html`](docs/index.html)) covers the overview, pre-chat fields, every embed setting, deploy,
+CORS, gaps and how to work on the repo. Live preview of the embed (mock Shopify objects, real UAT agent):
 https://bhagathganga.github.io/shopper-agent-workshop-demo/canadagoose/shopify/pdp.html
+
+This folder lives in the `shopper-agent-workshop-demo` repo; run every command below from
+`canadagoose/shopify-app/`.
 
 It is a port of `plugin_commerce_client`'s SFCC integration:
 
